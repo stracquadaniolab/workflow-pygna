@@ -1,6 +1,6 @@
 # PyGNA Snakemake workflow:
 
-Current version:  0.0.1-dev
+Current version:  0.1.0-dev
 
 A simple Snakemake workflow to perform network analyses using the Python Geneset Network Analysis ([PyGNA](https://github.com/stracquadaniolab/pygna)) package.
 
