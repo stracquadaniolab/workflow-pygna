@@ -1,0 +1,13 @@
+# This file should contain everything to configure the workflow on a global scale.
+# In case of sample based data, it should be complemented by a samples.tsv file that contains
+# one row per sample. It can be parsed easily via pandas.
+analysis_full:
+    network_file : 'data/barabasi.interactome.tsv'
+    geneset_file: 'data/disgenet_cancer.gmt'
+    outpath: 'results/'
+    prefix: "pygna"
+    number_of_permutations: 1000
+    cores: 4
+    sp_matrix: "data/interactome_SP.hdf5"
+    rwr_matrix: "data/matrices/interactome_RWR.hdf5"
+    geneset_B : 'data/disgenet_cancer.gmt'

@@ -1,0 +1,7 @@
+channels:
+  - stracquadaniolab
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - pygna
