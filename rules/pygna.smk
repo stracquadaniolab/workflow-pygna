@@ -1,12 +1,13 @@
 '''
-    Analysis of the genesesets with the merged file
+    All rules for pygna
 '''
+
 
 rule generate_matrix_sp:
     input:
         NETWORK
     output:
-        SP_MATRIX
+        protected(SP_MATRIX)
     conda: "../envs/pygna.yaml"
     shell:
         "pygna build-distance-matrix {input} {output}"
@@ -15,7 +16,7 @@ rule generate_matrix_rwr:
     input:
         NETWORK
     output:
-        RWR_MATRIX
+        protected(RWR_MATRIX)
     conda: "../envs/pygna.yaml"
     shell:
         "pygna build-RWR-diffusion {input} --output-file {output}"
@@ -24,46 +25,41 @@ rule topology_module:
     input:
         network=NETWORK,
         geneset=GENESET
-    params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
     output:
-        OUTPUT_FOLDER+PREFIX+"_table_module.csv"
-    conda: "../envs/pygna.yaml"
+        OUTPATH+"_topology_module.csv"
+    params:
+        nop=config["topology"]["number_of_permutations"],
+        cores=config["topology"]["cores"]
+    conda: 
+        "../envs/pygna.yaml"
     shell:
-        "pygna test-topology-module {input.network} {input.geneset} {params.out} {params.prefix} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-topology-module {input.network} {input.geneset} {output} --number-of-permutations {params.nop} --cores {params.cores}"
 
 rule topology_internal_degree:
     input:
         network=NETWORK,
         geneset=GENESET
-    params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
     output:
-        OUTPUT_FOLDER+PREFIX+"_table_internal_degree.csv"
+        OUTPATH+"_topology_internal_degree.csv"
+    params:
+        nop=config["topology"]["number_of_permutations"],
+        cores=config["topology"]["cores"]
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-topology-internal-degree {input.network} {input.geneset} {params.out} {params.prefix} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-topology-internal-degree {input.network} {input.geneset} {output} --number-of-permutations {params.nop} --cores {params.cores}"
 
 rule topology_total_degree:
     input:
         network=NETWORK,
         geneset=GENESET
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["topology"]["number_of_permutations"],
+        cores=config["topology"]["cores"]
     output:
-        OUTPUT_FOLDER+PREFIX+"_table_total_degree.csv"
+        OUTPATH+"_topology_total_degree.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-topology-total-degree {input.network} {input.geneset} {params.out} {params.prefix} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-topology-total-degree {input.network} {input.geneset} {output} --number-of-permutations {params.nop} --cores {params.cores}"
 
 rule topology_sp:
     input:
@@ -71,15 +67,13 @@ rule topology_sp:
         geneset=GENESET,
         matrix=SP_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["topology"]["number_of_permutations"],
+        cores=config["topology"]["cores"]
     output:
-        OUTPUT_FOLDER+PREFIX+"_table_SP.csv"
+        OUTPATH+"_topology_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-topology-sp {input.network} {input.geneset}  {input.matrix} {params.out} {params.prefix} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-topology-sp {input.network} {input.geneset} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
 
 rule topology_rwr:
     input:
@@ -87,83 +81,104 @@ rule topology_rwr:
         geneset=GENESET,
         matrix=RWR_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["topology"]["number_of_permutations"],
+        cores=config["topology"]["cores"]
     output:
-	    OUTPUT_FOLDER+PREFIX+"_table_RW.csv"
+	    OUTPATH+"_topology_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-topology-rwr {input.network} {input.geneset} {input.matrix} {params.out} {params.prefix} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-topology-rwr {input.network} {input.geneset} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
 
 rule association_RW:
     input:
         network=NETWORK,
         A=GENESET,
-        B=GENESET_B,
+        B=config["association"]["geneset_B"],
         matrix=RWR_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["association"]["number_of_permutations"],
+        cores=config["association"]["cores"]
     output:
-	    OUTPUT_FOLDER+PREFIX+"_table_association_rwr.csv"
+	    OUTPATH+"_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {params.out} {params.prefix} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 rule association_SP:
     input:
         network=NETWORK,
         A=GENESET,
-        B=GENESET_B,
+        B=config["association"]["geneset_B"],
         matrix=SP_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["association"]["number_of_permutations"],
+        cores=config["association"]["cores"]
     output:
-	    OUTPUT_FOLDER+PREFIX+"_table_association_sp.csv"
+	    OUTPATH+"_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {params.out} {params.prefix} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
-
+# COMPARISON
 rule comparison_RW:
     input:
         network=NETWORK,
         A=GENESET,
-        B=GENESET_B,
+        B=config["association"]["geneset_B"],
         matrix=RWR_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["association"]["number_of_permutations"],
+        cores=config["association"]["cores"]
     output:
-	    OUTPUT_FOLDER+PREFIX+"_table_comparison_rwr.csv"
+	    OUTPATH+"_comparison_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {params.out} {params.prefix} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 rule comparison_SP:
     input:
         network=NETWORK,
         A=GENESET,
-        B=GENESET_B,
+        B=config["association"]["geneset_B"],
         matrix=RWR_MATRIX
     params:
-        prefix=PREFIX,
-        out=OUTPUT_FOLDER,
-	    nop=NOP,
-        cores=CORES
+        nop=config["association"]["number_of_permutations"],
+        cores=config["association"]["cores"]
     output:
-	    OUTPUT_FOLDER+PREFIX+"_table_comparison_sp.csv"
+	    OUTPATH+"_comparison_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {params.out} {params.prefix} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
+
+
+# SINGLE GENESET COMPARISON
+rule within_comparison_RW:
+    input:
+        network=NETWORK,
+        A=GENESET,
+        matrix=RWR_MATRIX
+    params:
+        nop=config["within_comparison"]["number_of_permutations"],
+        cores=config["within_comparison"]["cores"]
+    output:
+	    OUTPATH+"_within_comparison_rwr.csv"
+    conda: "../envs/pygna.yaml"
+    shell:
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
+
+
+rule within_comparison_SP:
+    input:
+        network=NETWORK,
+        A=GENESET,
+        matrix=SP_MATRIX
+    params:
+        nop=config["within_comparison"]["number_of_permutations"],
+        cores=config["within_comparison"]["cores"]
+    output:
+	    OUTPATH+"_within_comparison_sp.csv"
+    conda: "../envs/pygna.yaml"
+    shell:
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
