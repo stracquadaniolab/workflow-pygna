@@ -1,13 +1,24 @@
-# This file should contain everything to configure the workflow on a global scale.
-# In case of sample based data, it should be complemented by a samples.tsv file that contains
-# one row per sample. It can be parsed easily via pandas.
-analysis_full:
+parameters:
     network_file : 'data/barabasi.interactome.tsv'
+    sp_matrix: "matrices/interactome_SP.hdf5"
+    rwr_matrix: "matrices/interactome_RWR.hdf5"
     geneset_file: 'data/disgenet_cancer.gmt'
-    outpath: 'results/'
-    prefix: "pygna"
-    number_of_permutations: 1000
+    outpath: 'results/pygna'
+    
+topology:
+    analyse: ['module','internal_degree','total_degree','rwr', 'sp']
+    number_of_permutations: 50
     cores: 4
-    sp_matrix: "data/interactome_SP.hdf5"
-    rwr_matrix: "data/matrices/interactome_RWR.hdf5"
+association:
+    analyse: ['rwr', 'sp']
     geneset_B : 'data/disgenet_cancer.gmt'
+    number_of_permutations: 50
+    cores: 4
+within_comparison:
+    analyse: ['rwr', 'sp']
+    number_of_permutations: 50
+    cores: 4
+
+figures:
+    extension: ['png']
+    outpath: 'results/figures/pygna'
