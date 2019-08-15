@@ -23,7 +23,7 @@ if len(config["parameters"]["rwr_matrix"])>0:
 else:
     RWR_MATRIX=OUTPATH+"_rwr_matrix.hdf5"
 
-include: "rules/pygna_fix_io.smk"
+include: "rules/pygna.smk"
 include: "rules/pygna_visualise.smk"
 
 rule all:
@@ -37,7 +37,7 @@ rule all:
 
 rule GNT_all:
     input:
-        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY)
+        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY),
         expand(OUTFIGURES+"_barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
 
 rule GNA_association_all:

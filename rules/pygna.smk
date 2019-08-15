@@ -19,7 +19,7 @@ rule generate_matrix_rwr:
         protected(RWR_MATRIX)
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna build-RWR-diffusion {input} --output-file {output}"
+        "pygna build-rwr-diffusion {input} --output-file {output}"
 
 rule topology_module:
     input:

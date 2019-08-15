@@ -2,21 +2,21 @@ parameters:
     network_file : 'data/barabasi.interactome.tsv'
     sp_matrix: "matrices/interactome_SP.hdf5"
     rwr_matrix: "matrices/interactome_RWR.hdf5"
-    geneset_file: 'data/disgenet_cancer.gmt'
+    geneset_file: 'data/disgenet_cancer_groups_testing.gmt'
     outpath: 'results/pygna'
     
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
-    number_of_permutations: 50
+    number_of_permutations: 100
     cores: 4
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : 'data/disgenet_cancer.gmt'
-    number_of_permutations: 50
+    geneset_B : 'data/disgenet_cancer_groups_testing.gmt'
+    number_of_permutations: 100
     cores: 4
 within_comparison:
     analyse: ['rwr', 'sp']
-    number_of_permutations: 50
+    number_of_permutations: 100
     cores: 4
 
 figures:
