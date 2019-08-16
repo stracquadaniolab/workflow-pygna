@@ -1,9 +1,9 @@
 parameters:
-    network_file : 'data/barabasi.interactome.tsv'
-    sp_matrix: "matrices/interactome_SP.hdf5"
-    rwr_matrix: "matrices/interactome_RWR.hdf5"
-    geneset_file: 'data/disgenet_cancer_groups_testing.gmt'
-    outpath: 'results/pygna'
+    network_file : '../min_working_example/barabasi.interactome.tsv'
+    sp_matrix: "../min_working_example/matrices/interactome_SP.hdf5"
+    rwr_matrix: "../min_working_example/matrices/interactome_RWR.hdf5"
+    geneset_file: '../min_working_example/disgenet_cancer_groups_subset.gmt'
+    outpath: '../min_working_example/results/'
     
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
@@ -11,7 +11,7 @@ topology:
     cores: 4
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : 'data/disgenet_cancer_groups_testing.gmt'
+    geneset_B : '../min_working_example/disgenet_cancer_groups_subset.gmt'
     number_of_permutations: 100
     cores: 4
 within_comparison:
@@ -21,4 +21,4 @@ within_comparison:
 
 figures:
     extension: ['png']
-    outpath: 'results/figures/pygna'
+    outpath: '../min_working_example/results/figures/'

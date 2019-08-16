@@ -44,3 +44,10 @@ rule GNA_association_all:
     input:
         expand(OUTPATH+"_association_{t}.csv", t=ASSOCIATION),
         expand(OUTFIGURES+"_heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
+
+rule single_geneset:
+    input:
+        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY),
+        expand(OUTFIGURES+"_barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
+        expand(OUTPATH+"_association_{t}.csv", t=ASSOCIATION),
+        expand(OUTFIGURES+"_heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
