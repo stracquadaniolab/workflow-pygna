@@ -28,26 +28,26 @@ include: "rules/pygna_visualise.smk"
 
 rule all:
     input:
-        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY),
-        expand(OUTFIGURES+"_barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
-        expand(OUTPATH+"_association_{t}.csv", t=ASSOCIATION),
-        expand(OUTFIGURES+"_heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
-        expand(OUTPATH+"_within_comparison_{t}.csv", t=COMPARISON),
-        expand(OUTFIGURES+"_heatmap_within_comparison_{t}.{e}", t=COMPARISON, e=EXTENSIONS),
+        expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),
+        expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
+        expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
+        expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
+        expand(OUTPATH+"table_within_comparison_{t}.csv", t=COMPARISON),
+        expand(OUTFIGURES+"heatmap_within_comparison_{t}.{e}", t=COMPARISON, e=EXTENSIONS),
 
 rule GNT_all:
     input:
-        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY),
-        expand(OUTFIGURES+"_barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
+        expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),
+        expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
 
 rule GNA_association_all:
     input:
-        expand(OUTPATH+"_association_{t}.csv", t=ASSOCIATION),
-        expand(OUTFIGURES+"_heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
+        expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
+        expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
 
 rule single_geneset:
     input:
-        expand(OUTPATH+"_topology_{t}.csv", t=TOPOLOGY),
-        expand(OUTFIGURES+"_barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
-        expand(OUTPATH+"_association_{t}.csv", t=ASSOCIATION),
-        expand(OUTFIGURES+"_heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
+        expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),
+        expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
+        expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
+        expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),

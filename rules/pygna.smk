@@ -26,7 +26,7 @@ rule topology_module:
         network=NETWORK,
         geneset=GENESET
     output:
-        OUTPATH+"_topology_module.csv"
+        OUTPATH+"table_topology_module.csv"
     params:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"]
@@ -40,7 +40,7 @@ rule topology_internal_degree:
         network=NETWORK,
         geneset=GENESET
     output:
-        OUTPATH+"_topology_internal_degree.csv"
+        OUTPATH+"table_topology_internal_degree.csv"
     params:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"]
@@ -56,7 +56,7 @@ rule topology_total_degree:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"]
     output:
-        OUTPATH+"_topology_total_degree.csv"
+        OUTPATH+"table_topology_total_degree.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-topology-total-degree {input.network} {input.geneset} {output} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -70,7 +70,7 @@ rule topology_sp:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"]
     output:
-        OUTPATH+"_topology_sp.csv"
+        OUTPATH+"table_topology_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-topology-sp {input.network} {input.geneset} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -84,7 +84,7 @@ rule topology_rwr:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"]
     output:
-	    OUTPATH+"_topology_rwr.csv"
+	    OUTPATH+"table_topology_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-topology-rwr {input.network} {input.geneset} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -99,7 +99,7 @@ rule association_RW:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"_association_rwr.csv"
+	    OUTPATH+"table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
@@ -115,7 +115,7 @@ rule association_SP:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"_association_sp.csv"
+	    OUTPATH+"table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
@@ -131,7 +131,7 @@ rule comparison_RW:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"_comparison_rwr.csv"
+	    OUTPATH+"table_comparison_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -147,7 +147,7 @@ rule comparison_SP:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"_comparison_sp.csv"
+	    OUTPATH+"table_comparison_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -163,7 +163,7 @@ rule within_comparison_RW:
         nop=config["within_comparison"]["number_of_permutations"],
         cores=config["within_comparison"]["cores"]
     output:
-	    OUTPATH+"_within_comparison_rwr.csv"
+	    OUTPATH+"table_within_comparison_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -178,7 +178,7 @@ rule within_comparison_SP:
         nop=config["within_comparison"]["number_of_permutations"],
         cores=config["within_comparison"]["cores"]
     output:
-	    OUTPATH+"_within_comparison_sp.csv"
+	    OUTPATH+"table_within_comparison_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
