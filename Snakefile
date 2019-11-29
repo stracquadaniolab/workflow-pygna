@@ -1,4 +1,4 @@
-configfile: "config.yaml"
+configfile: "config_temp.yaml"
 
 # Network Parameters
 NETWORK=config["parameters"]["network_file"]
@@ -51,3 +51,11 @@ rule single_geneset:
         expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
         expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
         expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
+
+rule multi:
+    input:
+
+
+rule simulation_sbm:
+
+rule simulation_hdn:

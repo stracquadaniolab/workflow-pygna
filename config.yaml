@@ -4,16 +4,19 @@ parameters:
     rwr_matrix: "../pygna_pipeline/matrices/interactome_RWR.hdf5"
     geneset_file: '../pygna_pipeline/data/disgenet_cancer_groups_testing.gmt'
     outpath: '../pygna_pipeline/results/'
+    diagnostic_folder: '../pygna_pipeline/results/diagnostic/'
     
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
     number_of_permutations: 100
     cores: 4
+
 association:
     analyse: ['rwr', 'sp']
     geneset_B : '../pygna_pipeline/data/disgenet_cancer_groups_testing.gmt'
     number_of_permutations: 100
     cores: 4
+
 within_comparison:
     analyse: ['rwr', 'sp']
     number_of_permutations: 100

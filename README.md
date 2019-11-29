@@ -49,8 +49,36 @@ If you not only want to fix the software stack but also the underlying OS, use
     snakemake --use-conda --use-singularity
 
 in combination with any of the modes above.
-See the [Snakemake documentation](https://snakemake.readthedocs.io/en/stable/executable.html) for further details.
+See the [Snakemake documentation](https://snakemake.readthedocs.io/en/stablve/executable.html) for further details.
 
 #### Step 4: Check results
 
 Results are stored in the `results` folder. 
+
+
+## Paper Results
+
+We provide a Snakefile to replicate the results of the paper:  
+
+- *single_geneset*: with this suffix we refer to all the results of for the high-throughput experiments taken from TCGA biolinks (Fig. 2).    
+- *multi*: refers to the analysis of multiple geneset from the Bailey et al. paper (Fig. 4).
+
+Following the next steps you should be able to run the paper pipelines:
+
+1. First download the data folder from [data repo](https://add_our_data)   
+
+2. The pipeline uses a relative path for the data repo, you can:  
+    A. add the data folder in the same location you have the workflow-pygna repo  
+    B. change the relative path in the config file  
+
+3. Check the `config_paper_single.yaml` and `config_paper_multi.yaml` configuration files. They include number of permutations and cores parameters, tweak them as needed (for the moment we have set 3 and 1
+so that you can quickly check if all results are generated. ).
+
+4. To obtain all the results for the single geneset
+
+    snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml
+
+5. To obtain the results for the multi geneset  
+
+    snakemake --snakefile Snakefile_paper multi_all --configfile config_paper_multi.yaml
+
