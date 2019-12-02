@@ -64,10 +64,6 @@ rule analyse_module_hdn:
         "pygna test-topology-module {input.network} {input.geneset} {output}  --number-of-permutations {params.nop} --size-cut 1 --cores {params.cores}"
 
 
-
-
-
-
 rule analyse_sp_hdn:
     input:
         network=ancient(OUTPATH+"hdn_sim/sim_hdn_np_{np}_vp_{vp}_p_{p}_s_{s}_network.tsv"),
