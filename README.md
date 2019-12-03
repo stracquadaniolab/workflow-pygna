@@ -82,3 +82,10 @@ so that you can quickly check if all results are generated. ).
 
     snakemake --snakefile Snakefile_paper multi_all --configfile config_paper_multi.yaml
 
+6. To obtain the results for the hdn simulations  
+
+    snakemake --snakefile Snakefile_paper hdn_all --configfile config_paper_hdn.yaml
+
+7. To obtain the results for the multi geneset  
+
+    snakemake --snakefile Snakefile_paper sbm_all --configfile config_paper_sbm.yaml

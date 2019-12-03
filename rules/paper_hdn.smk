@@ -47,7 +47,7 @@ rule generate_hdn:
        network=OUTPATH+"hdn_sim/sim_hdn_np_{np}_vp_{vp}_p_{p}_s_{s}_network.tsv",
        geneset=OUTPATH+"hdn_sim/sim_hdn_np_{np}_vp_{vp}_p_{p}_s_{s}_genes.gmt"
    shell:
-       "pygna generate-hdn-network {params.folder} {params.prefix} --n-nodes {params.nodes} --network-prob {params.np} --vip-prob {params.vp} --vip-percentage {params.p} --number-of-simulations {params.s}"
+       "pygna generate-hdn-network {params.folder} {params.prefix} --n-nodes {params.nodes} --network-prob {params.np} --hdn-prob {params.vp} --hdn-percentage {params.p} --number-of-simulations {params.s}"
 
 
 
