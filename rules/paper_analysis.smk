@@ -10,6 +10,12 @@ rule generate_data:
     script:
         "/script/TCGA_vignette.R"
 
+rule generate_gmt:
+    input:
+        GENESET_CSV
+    output:
+        GENESET
+
 rule generate_matrix_sp:
     input:
         NETWORK
