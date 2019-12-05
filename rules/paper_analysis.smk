@@ -8,7 +8,7 @@ rule generate_data:
     output:
         GENESET_CSV
     script:
-    "./script/TCGA_vignette.R"
+        "/script/TCGA_vignette.R"
 
 rule generate_matrix_sp:
     input:

@@ -4,7 +4,6 @@ configfile: "config_temp.yaml"
 NETWORK=config["parameters"]["network_file"]
 OUTPATH=config["parameters"]["outpath"]
 GENESET=config["parameters"]["geneset_file"]
-GENESET_CSV=config["parameters"]["geneset_csv"]
 
 TOPOLOGY = config["topology"]["analyse"]
 ASSOCIATION = config["association"]["analyse"]
