@@ -1,12 +1,12 @@
 parameters:
-    network_file : '../pygna_paper_proj/data/biogrid_3.168_filtered.tsv'
-    sp_matrix: "../pygna_paper_proj/data/interactome_SP.hdf5"
-    rwr_matrix: "../pygna_paper_proj/data/interactome_RWR.hdf5"
-    geneset_file: '../pygna_paper_proj/data/TCGA-BRCA.gmt'
-    geneset_csv: '../pygna_paper_proj/data/manuscriptDatasetUncut.csv'
-    outpath: '../pygna_paper_proj/results/single_geneset/'
-    diagnostic_folder: '../pygna_paper_proj/results/single_geneset/figures/'
-    
+    network_file : './data/biogrid_3.168_filtered.tsv'
+    sp_matrix: "./data/interactome_SP.hdf5"
+    rwr_matrix: "./data/interactome_RWR.hdf5"
+    geneset_file: './data/TCGA-BRCA.gmt'
+    geneset_csv: './data/TCGADataset.csv'
+    outpath: './results/single_geneset/'
+    diagnostic_folder: './results/single_geneset/figures/'
+
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
     number_of_permutations: 3
@@ -14,7 +14,7 @@ topology:
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : '../pygna_paper_proj/data/goslimEntrez.gmt'
+    geneset_B : './data/goslimEntrez.gmt'
     number_of_permutations: 3
     cores: 1
 
@@ -25,7 +25,7 @@ within_comparison:
 
 figures:
     extension: ['png', 'pdf']
-    outpath: '../pygna_paper_proj/results/single_geneset/figures/'
+    outpath: './results/single_geneset/figures/'
 
 hdn_parameters:
     number_simulations: 2
@@ -40,4 +40,3 @@ sbm_parameters:
     theta0: ''
     percentage: ''
     density: ''
-    

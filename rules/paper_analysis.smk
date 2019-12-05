@@ -2,6 +2,13 @@
     All rules for pygna
 '''
 
+rule generate_data:
+    input:
+        OUTPATH
+    output:
+        GENESET_CSV
+    script:
+    "./script/TCGA_vignette.R"
 
 rule generate_matrix_sp:
     input:
@@ -107,7 +114,7 @@ rule association_RW:
 	    OUTPATH+"table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --setname-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 rule association_SP:
@@ -124,7 +131,7 @@ rule association_SP:
 	    OUTPATH+"table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --setname-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 # DIFFUSION HOTNET
