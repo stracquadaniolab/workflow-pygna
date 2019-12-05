@@ -1,0 +1,43 @@
+parameters:
+    network_file : ''
+    sp_matrix: ""
+    rwr_matrix: ""
+    geneset_file: ''
+    geneset_csv: ''
+    outpath: '../pygna_paper_proj/results/sbm/'
+    diagnostic_folder: ''
+    
+topology:
+    analyse: ['module','rwr', 'sp']
+    number_of_permutations: 3
+    cores: 1
+
+association:
+    analyse: ['']
+    geneset_B : ''
+    number_of_permutations: 3
+    cores: 1
+
+within_comparison:
+    analyse: []
+    number_of_permutations: 3
+    cores: 1
+
+figures:
+    extension: ['png', 'pdf']
+    outpath: '../pygna_paper_proj/results/sbm/figures/'
+
+hdn_parameters:
+    number_simulations: 2
+    n_nodes: 10
+    network_probability: []
+    hdn_probability: []
+    hdn_percentage: []
+
+sbm_parameters:
+    number_simulations: 2
+    n_nodes: 10
+    theta0: '0.9,0.7,0.3,0.1'
+    percentage: '0.1'
+    density: '0.5'
+
