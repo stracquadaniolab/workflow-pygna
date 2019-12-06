@@ -16,7 +16,7 @@ rule generate_gmt:
     output:
         GENESET
     shell:
-        "pygna geneset-from-table {input} tcga_biolink_brca --output-gmt {output} -f FDR -d significant -n genes.Entrezid"
+        "pygna geneset-from-table {input} tcga_biolink_brca --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5"
 
 rule generate_matrix_sp:
     input:

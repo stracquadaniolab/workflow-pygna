@@ -41,14 +41,15 @@ dataDEGs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
                             mat2 = dataFilt[,samplesTP],
                             Cond1type = "Normal",
                             Cond2type = "Tumor",
-                            fdr.cut = 0.01 ,
-                            logFC.cut = 3,
+                            fdr.cut = 1.1 ,
+                            logFC.cut = 0,
                             method = "glmLRT")
 print("Dataset creation: Start")
 dataset = dataDEGs
 symbols = unlist(c(row.names(dataset)))
 dataset['genes.Entrezid']=mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')
 dataset = dataset[order(dataset$logFC),]
+dataset["significant"] = as.double(abs(dataset$logFC)>=3)
 write.csv(dataset, OUTPUTFILE)
 
 print("Dataset creation: Done")
