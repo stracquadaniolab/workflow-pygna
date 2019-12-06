@@ -1,7 +1,6 @@
 library(SummarizedExperiment)
 library(TCGAbiolinks)
 library(org.Hs.eg.db)
-library(data.table)
 
 DATAFOLDER= snakemake@input[[1]]
 OUTPUTFILE= snakemake@output[[1]]
@@ -41,7 +40,7 @@ dataDEGs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
                             mat2 = dataFilt[,samplesTP],
                             Cond1type = "Normal",
                             Cond2type = "Tumor",
-                            fdr.cut = 1.1 ,
+                            fdr.cut = 0.01 ,
                             logFC.cut = 0,
                             method = "glmLRT")
 print("Dataset creation: Start")
