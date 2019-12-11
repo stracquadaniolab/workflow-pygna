@@ -55,7 +55,7 @@ dataset = dataDEGs
 symbols = unlist(c(row.names(dataset)))
 dataset['genes.Entrezid']=mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')
 dataset = dataset[order(dataset$logFC),]
-dataset["significant"] = as.double(abs(dataset$logFC)>=3)
+dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
 write.csv(dataset, OUTPUTFILE)
 
 print("Dataset creation: Done")
