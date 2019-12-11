@@ -7,4 +7,6 @@ channels:
 dependencies:
   - pygna
   - R=3.6
-#--strict-channel-priority R=3.6
+  - bioconductor-tcgabiolinks
+  - bioconductor-summarizedexperiment
+  - bioconductor-org.hs.eg.db

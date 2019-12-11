@@ -14,7 +14,7 @@ topology:
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : '../pygna_paper_proj/data/goslimEntrez.gmt'
+    geneset_B : '../pygna_paper_proj/data/external/goslimEntrez.gmt'
     number_of_permutations: 1000
     cores: 1
 
