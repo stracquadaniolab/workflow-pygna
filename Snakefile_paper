@@ -45,7 +45,7 @@ rule single_all:
         expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
         expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
         expand(OUTFIGURES+"volcano_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
-        OUTPATH+"table_diffusion.csv"
+        #OUTPATH+"table_diffusion.csv"
 
 rule multi_all:
     input:

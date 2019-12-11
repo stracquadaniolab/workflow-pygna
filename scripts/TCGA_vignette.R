@@ -6,14 +6,14 @@ library(data.table)
 DATAFOLDER= snakemake@input[[1]]
 OUTPUTFILE= snakemake@output[[1]]
 
-filename = paste(DATAFOLDER,"/brcaExp.rda")
+filename = paste(DATAFOLDER,"brcaExp.rda",sep = "")
 
 print("Downloading data from TCGA...")
-query <- GDCquery(project = "TCGA-BRCA", 
+query <- GDCquery(project = "TCGA-BRCA",
                       legacy = TRUE,
                       data.category = "Gene expression",
                       data.type = "Gene expression quantification",
-                      platform = "Illumina HiSeq", 
+                      platform = "Illumina HiSeq",
                       file.type = "results",
                       experimental.strategy = "RNA-Seq",
                       sample.type = c("Primary Tumor","Solid Tissue Normal"))

@@ -6,15 +6,18 @@ rule generate_data:
     input:
         OUTPATH
     output:
-        #GENESET_CSV
+        GENESET_CSV
     script:
-        "/script/TCGA_vignette.R"
+        "../scripts/TCGA_vignette.R"
 
 rule generate_gmt:
     input:
         GENESET_CSV
     output:
-        #GENESET
+        GENESET
+    shell:
+        "pygna geneset-from-table {input} tcga_biolink_brca --output-gmt {output} -f FDR -d significant -n genes.Entrezid"
+
 
 rule generate_matrix_sp:
     input:
@@ -120,7 +123,8 @@ rule association_RW:
 	    OUTPATH+"table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+
 
 
 rule association_SP:
@@ -137,7 +141,7 @@ rule association_SP:
 	    OUTPATH+"table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --setname-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 # DIFFUSION HOTNET
