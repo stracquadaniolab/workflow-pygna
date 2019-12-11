@@ -1,3 +1,4 @@
+options(repos="https://cran.rstudio.com")
 install.packages("BiocManager")
 BiocManager::install(version = "3.10")
 BiocManager::install("SummarizedExperiment")
