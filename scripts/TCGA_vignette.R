@@ -1,5 +1,12 @@
+options(repos="https://cran.rstudio.com")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(version = "3.10")
+BiocManager::install("SummarizedExperiment")
 library(SummarizedExperiment)
+BiocManager::install("TCGAbiolinks")
 library(TCGAbiolinks)
+BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 
 DATAFOLDER= snakemake@input[[1]]
@@ -15,7 +22,7 @@ query <- GDCquery(project = "TCGA-BRCA",
                       platform = "Illumina HiSeq",
                       file.type = "results",
                       experimental.strategy = "RNA-Seq",
-                      sample.type = c("Primary Tumor","Solid Tissue Normal"))
+                      sample.type = c("Primary solid Tumor","Solid Tissue Normal"))
 GDCdownload(query)
 brca <- GDCprepare(query = query, save = TRUE, save.filename = filename)
 
