@@ -6,9 +6,4 @@ channels:
   - r
 dependencies:
   - pygna
-  - r=3.6.1
-  - SummarizedExperiment
-  - BiocManager
-  - BioinformaticsFMRP/TCGAbiolinks
-  - TCGAbiolinks
-  - org.Hs.eg.db
+  - r=3.6.0

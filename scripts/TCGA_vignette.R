@@ -1,5 +1,11 @@
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(version = "3.10")
+BiocManager::install("SummarizedExperiment")
 library(SummarizedExperiment)
+BiocManager::install("BioinformaticsFMRP/TCGAbiolinks")
 library(TCGAbiolinks)
+BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 
 DATAFOLDER= snakemake@input[[1]]
