@@ -3,10 +3,10 @@
 '''
 
 rule generate_data:
-    input:
-        OUTPATH
     output:
         GENESET_CSV
+    params:
+        path=OUTPATH
     script:
         "../scripts/TCGA_vignette.R"
 
@@ -16,7 +16,7 @@ rule generate_gmt:
     output:
         GENESET
     shell:
-        "pygna geneset-from-table {input} tcga_biolink_brca --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5 -a greater"
+        "pygna geneset-from-table {params.path} tcga_biolink_brca --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5 -a greater"
 
 rule generate_matrix_sp:
     input:
