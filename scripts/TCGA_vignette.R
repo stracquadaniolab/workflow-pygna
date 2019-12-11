@@ -1,7 +1,6 @@
 library(SummarizedExperiment)
 library(TCGAbiolinks)
 library(org.Hs.eg.db)
-library(data.table)
 
 DATAFOLDER= snakemake@input[[1]]
 OUTPUTFILE= snakemake@output[[1]]
@@ -42,13 +41,14 @@ dataDEGs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
                             Cond1type = "Normal",
                             Cond2type = "Tumor",
                             fdr.cut = 0.01 ,
-                            logFC.cut = 3,
+                            logFC.cut = 0,
                             method = "glmLRT")
 print("Dataset creation: Start")
 dataset = dataDEGs
 symbols = unlist(c(row.names(dataset)))
 dataset['genes.Entrezid']=mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')
 dataset = dataset[order(dataset$logFC),]
+dataset["significant"] = as.double(abs(dataset$logFC)>=3)
 write.csv(dataset, OUTPUTFILE)
 
 print("Dataset creation: Done")
