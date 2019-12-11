@@ -1,5 +1,6 @@
 options(repos="https://cran.rstudio.com")
-install.packages("BiocManager")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
 BiocManager::install(version = "3.10")
 BiocManager::install("SummarizedExperiment")
 library(SummarizedExperiment)
