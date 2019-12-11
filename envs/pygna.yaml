@@ -3,8 +3,8 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - r
+  - strict-channel-priority
 dependencies:
   - pygna
-  - r=3.6.0
-  - --strict-channel-priority R=3.6
+  - R=3.6
+#--strict-channel-priority R=3.6
