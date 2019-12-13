@@ -1,31 +1,31 @@
 parameters:
-    network_file : "../pygna_paper_proj/data/external/biogrid_3.168_filtered.tsv"
-    sp_matrix: "../pygna_paper_proj/data/external/interactome_SP.hdf5"
-    rwr_matrix: "../pygna_paper_proj/data/external/interactome_RWR.hdf5"
-    geneset_file: "../pygna_paper_proj/data/external/TCGA-BRCA.gmt"
-    geneset_csv: "../pygna_paper_proj/data/external/TCGADataset.csv"
-    outpath: '../pygna_paper_proj/results/single_geneset/tables/'
-    diagnostic_folder: '../pygna_paper_proj/results/single_geneset/figures/'
+    network_file : "data/biogrid_3.168_filtered.tsv"
+    sp_matrix: "data/matrices/interactome_SP.hdf5"
+    rwr_matrix: "data/matrices/interactome_RWR.hdf5"
+    geneset_file: "data/blca_diffexp.gmt"
+    geneset_csv: "data/blca_diffexp.csv"
+    outpath: 'results/single_geneset/'
+    diagnostic_folder: 'results/single_geneset/'
 
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
-    number_of_permutations: 1000
+    number_of_permutations: 1
     cores: 1
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : '../pygna_paper_proj/data/external/goslimEntrez.gmt'
-    number_of_permutations: 1000
+    geneset_B : 'data/goslimEntrez.gmt'
+    number_of_permutations: 1
     cores: 1
 
 within_comparison:
     analyse: []
-    number_of_permutations: 1000
+    number_of_permutations: 1
     cores: 1
 
 figures:
     extension: ['png', 'pdf']
-    outpath: '../pygna_paper_proj/results/single_geneset/figures/'
+    outpath: 'results/single_geneset/'
 
 hdn_parameters:
     number_simulations: 2

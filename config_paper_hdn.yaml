@@ -4,7 +4,7 @@ parameters:
     rwr_matrix: ""
     geneset_file: ''
     geneset_csv: ''
-    outpath: '../pygna_paper_proj/results/hdn/'
+    outpath: 'results/hdn/'
     diagnostic_folder: ''
     
 topology:
@@ -25,12 +25,12 @@ within_comparison:
 
 figures:
     extension: ['png', 'pdf']
-    outpath: '../pygna_paper_proj/results/hdn/figures/'
+    outpath: 'results/hdn/'
 
 hdn_parameters:
-    number_simulations: 2
-    n_nodes: 10
-    network_probability: [0.06,0.1]
+    number_simulations: 5
+    n_nodes: 1000
+    network_probability: [0.06, 0.1, 0.2]
     hdn_probability: [0.1,0.05]
     hdn_percentage: [2,4]
 

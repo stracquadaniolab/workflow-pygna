@@ -4,7 +4,7 @@ parameters:
     rwr_matrix: ""
     geneset_file: ''
     geneset_csv: ''
-    outpath: '../pygna_paper_proj/results/sbm/'
+    outpath: 'results/sbm/'
     diagnostic_folder: ''
     
 topology:
@@ -25,7 +25,7 @@ within_comparison:
 
 figures:
     extension: ['png', 'pdf']
-    outpath: '../pygna_paper_proj/results/sbm/figures/'
+    outpath: 'results/sbm/'
 
 hdn_parameters:
     number_simulations: 2
@@ -35,9 +35,9 @@ hdn_parameters:
     hdn_percentage: []
 
 sbm_parameters:
-    number_simulations: 2
-    n_nodes: 10
+    number_simulations: 5
+    n_nodes: 1000
     theta0: '0.9,0.7,0.3,0.1'
     percentage: '0.1'
-    density: '0.5'
+    density: '0.06, 0.1, 0.2'
 

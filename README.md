@@ -60,32 +60,47 @@ Results are stored in the `results` folder.
 
 We provide a Snakefile to replicate the results of the paper:  
 
-- *single_geneset*: with this suffix we refer to all the results of for the high-throughput experiments taken from TCGA biolinks (Fig. 2).    
+- *single_geneset*: with this suffix we refer to all the results of for the high-throughput    experiments taken from TCGA biolinks (Fig. 2).   
+  **Please note:** the `scripts/tcga_rnaseq.R` script downloads and processes the BLCA RNAseq dataset. This step is time and memory consuming, but, most importantly, we have noticed that it is dvifficult to be able to replicate the exact environment/TCGA version being installed (there are many issues of this kind raised on the TCGAbiolinks github repo ). For reproducibility, inside `data/GDCdata` we provide the BLCA expression data on which our analysis is done and the blca_diffexp.csv file contains the full differential expression results. We have generated this data with TCGAbiolinks v2.15.2. 
+
 - *multi*: refers to the analysis of multiple geneset from the Bailey et al. paper (Fig. 4).
+
+
 
 Following the next steps you should be able to run the paper pipelines:
 
 1. First download the data folder from [data repo](https://add_our_data)   
 
-2. The pipeline uses a relative path for the data repo, you can:  
-    A. add the data folder in the same location you have the workflow-pygna repo  
+2. The pipeline uses the data folder path, you can:  
+    A. add the data folder inside the workflow-pygna folder 
     B. change the relative path in the config file  
 
 3. Check the `config_paper_single.yaml` and `config_paper_multi.yaml` configuration files. They include number of permutations and cores parameters, tweak them as needed (for the moment we have set 3 and 1
 so that you can quickly check if all results are generated. ).
 
-4. To obtain all the results for the single geneset
+4. As we provide intermediate files whose generation can be very time consuming      (differential expression results and SP/RWR matrices), run 
 
-    snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml
+        snakemake --snakefile Snakefile_paper <analysis>_all --configfile config_paper_<analysis>.yaml -t 
 
-5. To obtain the results for the multi geneset  
+   with `<analisys>` being one of single or multi, to update all files time tag and avoid recreating them (snakemake would try to run the pipeline rule again if the files have been recently modified).
 
-    snakemake --snakefile Snakefile_paper multi_all --configfile config_paper_multi.yaml
+5. To obtain all the results for the single geneset (avoid the first step to have the full regeneration of all files):
 
-6. To obtain the results for the hdn simulations  
+        snakemake snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml -t 
+        
+        snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml
 
-    snakemake --snakefile Snakefile_paper hdn_all --configfile config_paper_hdn.yaml
+6. To obtain the results for the multi geneset
 
-7. To obtain the results for the multi geneset  
+        snakemake snakemake --snakefile Snakefile_paper multi_all --configfile config_paper_multi.yaml -t 
+        
+        snakemake --snakefile Snakefile_paper multi_all --configfile config_paper_multi.yaml
 
-    snakemake --snakefile Snakefile_paper sbm_all --configfile config_paper_sbm.yaml
+7. To obtain the results for the hdn simulations  
+
+        snakemake --snakefile Snakefile_paper hdn_all --configfile config_paper_hdn.yaml
+
+8. To obtain the results for the multi geneset  
+
+        snakemake --snakefile Snakefile_paper sbm_all --configfile config_paper_sbm.yaml
+

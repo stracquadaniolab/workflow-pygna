@@ -157,7 +157,7 @@ rule test_diffusion_hotnet:
 	    OUTPATH+"table_diffusion.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-diffusion-hotnet {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores} --name-column genes.Entrezid --weight-column logFC --filter-column PValue --normalise"
+        "pygna test-diffusion-hotnet {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores} --name-column genes.Entrezid --weight-column logFC --filter-column significant --filter-condition greater --filter-threshold 0.5  --normalise"
 
 
 # SINGLE GENESET COMPARISON

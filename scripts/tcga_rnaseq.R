@@ -12,10 +12,10 @@ library(org.Hs.eg.db)
 DATAFOLDER= snakemake@input[[1]]
 OUTPUTFILE= snakemake@output[[1]]
 
-filename = paste(DATAFOLDER,"brcaExp.rda",sep = "")
+filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
 
 print("Downloading data from TCGA...")
-query <- GDCquery(project = "TCGA-BRCA",
+query <- GDCquery(project = "TCGA-BLCA",
                       legacy = TRUE,
                       data.category = "Gene expression",
                       data.type = "Gene expression quantification",
@@ -24,10 +24,10 @@ query <- GDCquery(project = "TCGA-BRCA",
                       experimental.strategy = "RNA-Seq",
                       sample.type = c("Primary solid Tumor","Solid Tissue Normal"))
 GDCdownload(query)
-brca <- GDCprepare(query = query, save = TRUE, save.filename = filename)
+experiment <- GDCprepare(query = query, save = TRUE, save.filename = filename)
 
 # normalization of genes
-dataNorm <- TCGAanalyze_Normalization(tabDF = assay(brca), geneInfo =  geneInfo)
+dataNorm <- TCGAanalyze_Normalization(tabDF = assay(experiment), geneInfo =  geneInfo)
 
 # quantile filter of genes
 dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm,

@@ -1,31 +1,31 @@
 parameters:
-    network_file : '../pygna_paper_proj/data/biogrid_3.168_filtered.tsv'
-    sp_matrix: "../pygna_paper_proj/data/interactome_SP.hdf5"
-    rwr_matrix: "../pygna_paper_proj/data/interactome_RWR.hdf5"
-    geneset_file: '../pygna_paper_proj/data/bailey.gmt'
-    geneset_csv: ''
-    outpath: '../pygna_paper_proj/results/multi/'
-    diagnostic_folder: '../pygna_paper_proj/results/multi/figures/'
+    network_file : 'data/biogrid_3.168_filtered.tsv'
+    sp_matrix: "data/matrices/interactome_SP.hdf5"
+    rwr_matrix: "data/matrices/interactome_RWR.hdf5"
+    geneset_file: 'data/bailey.gmt'
+    geneset_csv: 'data/bailey.gmt'
+    outpath: 'results/multi/'
+    diagnostic_folder: 'results/multi/'
     
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
-    number_of_permutations: 3
+    number_of_permutations: 1
     cores: 1
 
 association:
     analyse: []
     geneset_B : ''
-    number_of_permutations: 3
+    number_of_permutations: 1
     cores: 1
 
 within_comparison:
     analyse: ['rwr', 'sp']
-    number_of_permutations: 3
+    number_of_permutations: 1
     cores: 1
 
 figures:
     extension: ['pdf', 'png']
-    outpath: '../pygna_paper_proj/results/multi/figures/'
+    outpath: 'results/multi/'
 
 hdn_parameters:
     number_simulations: 2
