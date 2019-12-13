@@ -3,11 +3,5 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - strict-channel-priority
 dependencies:
   - pygna
-  - R=3.6
-  - bioconductor-tcgabiolinks
-  - bioconductor-summarizedexperiment
-  - bioconductor-org.hs.eg.db
-  - r r-stringi

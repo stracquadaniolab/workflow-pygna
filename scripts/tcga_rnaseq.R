@@ -9,10 +9,10 @@ library(TCGAbiolinks)
 #BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 
-DATAFOLDER= snakemake@input[[1]]
+DATAFOLDER= snakemake@params[[1]]
 OUTPUTFILE= snakemake@output[[1]]
 
-filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
+#filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
 
 print("Downloading data from TCGA...")
 query <- GDCquery(project = "TCGA-BLCA",
@@ -24,7 +24,7 @@ query <- GDCquery(project = "TCGA-BLCA",
                       experimental.strategy = "RNA-Seq",
                       sample.type = c("Primary solid Tumor","Solid Tissue Normal"))
 GDCdownload(query)
-experiment <- GDCprepare(query = query, save = TRUE, save.filename = filename)
+experiment <- GDCprepare(query = query)
 
 # normalization of genes
 dataNorm <- TCGAanalyze_Normalization(tabDF = assay(experiment), geneInfo =  geneInfo)

@@ -30,6 +30,12 @@ include: "rules/paper_visualise.smk"
 include: "rules/paper_hdn.smk"
 include: "rules/paper_sbm.smk"
 
+
+
+rule dummy:
+    input:
+        GENESET_CSV
+
 rule all:
     input:
         expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),

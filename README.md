@@ -61,15 +61,13 @@ Results are stored in the `results` folder.
 We provide a Snakefile to replicate the results of the paper:  
 
 - *single_geneset*: with this suffix we refer to all the results of for the high-throughput    experiments taken from TCGA biolinks (Fig. 2).   
-  **Please note:** the `scripts/tcga_rnaseq.R` script downloads and processes the BLCA RNAseq dataset. This step is time and memory consuming, but, most importantly, we have noticed that it is dvifficult to be able to replicate the exact environment/TCGA version being installed (there are many issues of this kind raised on the TCGAbiolinks github repo ). For reproducibility, inside `data/GDCdata` we provide the BLCA expression data on which our analysis is done and the blca_diffexp.csv file contains the full differential expression results. We have generated this data with TCGAbiolinks v2.15.2. 
-
+  **Please note:** the `scripts/tcga_rnaseq.R` script downloads and processes the BLCA RNAseq dataset. This step is time and memory consuming, but, most importantly, we have noticed that it is difficult to be able to replicate the exact environment/TCGA version being installed (there are many issues of this kind raised on the TCGAbiolinks github repo ). For reproducibility, we provide the blca_diffexp.csv file that contains the full differential expression results. We have generated this data with R=3.6 and TCGAbiolinks v2.14.0. 
+  use the `--use-conda` flag to install the environment with the same parameters
 - *multi*: refers to the analysis of multiple geneset from the Bailey et al. paper (Fig. 4).
-
-
 
 Following the next steps you should be able to run the paper pipelines:
 
-1. First download the data folder from [data repo](https://add_our_data)   
+1. First download the data folder from [Zenodo](https://zenodo.org/record/3574027#.XfObSZP7RTY)   
 
 2. The pipeline uses the data folder path, you can:  
     A. add the data folder inside the workflow-pygna folder 
@@ -88,7 +86,7 @@ so that you can quickly check if all results are generated. ).
 
         snakemake snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml -t 
         
-        snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml
+        snakemake --snakefile Snakefile_paper single_all --configfile config_paper_single.yaml --use-conda
 
 6. To obtain the results for the multi geneset
 

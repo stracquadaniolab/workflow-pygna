@@ -1,0 +1,12 @@
+channels:
+  - r 
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - r=3.6.0
+  - r-base
+  - bioconductor-tcgabiolinks=2.14.0
+  - bioconductor-summarizedexperiment
+  - bioconductor-org.hs.eg.db
+  - r-stringi

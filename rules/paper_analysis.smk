@@ -5,18 +5,19 @@
 rule generate_data:
     output:
         GENESET_CSV
-    params:
-        path=OUTPATH
+    conda: "../envs/tcgabiolinks.yaml"
     script:
-        "../scripts/TCGA_vignette.R"
+        "../scripts/tcga_rnaseq.R"
+
 
 rule generate_gmt:
     input:
         GENESET_CSV
     output:
         GENESET
+    conda: "../envs/pygna.yaml"
     shell:
-        "pygna geneset-from-table {params.path} tcga_biolink_brca --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5 -a greater"
+        "pygna geneset-from-table {input} tcga_biolink_brca --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5 -a greater"
 
 
 rule generate_matrix_sp:
