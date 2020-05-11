@@ -11,18 +11,24 @@ library(org.Hs.eg.db)
 
 DATAFOLDER= snakemake@params[[1]]
 OUTPUTFILE= snakemake@output[[1]]
+PROJECT = snakemake@input[[1]]
 
 #filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
 
+if (PROJECT %in% c("TCGA-LAML","TCGA-LCML")) {
+  sampleType= c("Primary Blood Derived Cancer - Peripheral Blood","Blood Derived Normal")
+} else
+  sampleType= c("Primary Tumor","Solid Tissue Normal")
+
 print("Downloading data from TCGA...")
-query <- GDCquery(project = "TCGA-BLCA",
+query <- GDCquery(project = PROJECT,
                       legacy = TRUE,
                       data.category = "Gene expression",
                       data.type = "Gene expression quantification",
                       platform = "Illumina HiSeq",
                       file.type = "results",
                       experimental.strategy = "RNA-Seq",
-                      sample.type = c("Primary solid Tumor","Solid Tissue Normal"))
+                      sample.type = sampleType)
 GDCdownload(query)
 experiment <- GDCprepare(query = query)
 
