@@ -4,15 +4,18 @@
 
 rule generate_data:
     output:
-        GENESET_CSV
+          OUTPATH+"datasets/{n}/"+GENESET_CSV
     conda: "../envs/tcgabiolinks.yaml"
+    params:
+        name= "{n}",
+        folder= OUTPATH+"datasets/{n}"
     script:
         "../scripts/tcga_rnaseq.R"
 
 
 rule generate_gmt:
     input:
-        GENESET_CSV
+         OUTPATH+"datasets/{n}/"+GENESET_CSV
     output:
         GENESET
     conda: "../envs/pygna.yaml"

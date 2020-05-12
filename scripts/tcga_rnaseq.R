@@ -10,11 +10,11 @@ library(TCGAbiolinks)
 library(org.Hs.eg.db)
 
 DATAFOLDER= snakemake@params[[1]]
+PROJECT = snakemake@params[[2]]
 OUTPUTFILE= snakemake@output[[1]]
-PROJECT = snakemake@input[[1]]
 
 #filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
-
+PROJECT="TCGA-LUSC"
 if (PROJECT %in% c("TCGA-LAML","TCGA-LCML")) {
   sampleType= c("Primary Blood Derived Cancer - Peripheral Blood","Blood Derived Normal")
 } else
@@ -29,6 +29,7 @@ query <- GDCquery(project = PROJECT,
                       file.type = "results",
                       experimental.strategy = "RNA-Seq",
                       sample.type = sampleType)
+print(query)
 GDCdownload(query)
 experiment <- GDCprepare(query = query)
 

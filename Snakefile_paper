@@ -4,6 +4,7 @@ OUTPATH=config["parameters"]["outpath"]
 
 GENESET=config["parameters"]["geneset_file"]
 GENESET_CSV = config["parameters"]["geneset_csv"]
+GENESET_NAME = config["parameters"]["tcga_dataset"]
 
 TOPOLOGY = config["topology"]["analyse"]
 ASSOCIATION = config["association"]["analyse"]
@@ -31,10 +32,9 @@ include: "rules/paper_hdn.smk"
 include: "rules/paper_sbm.smk"
 
 
-
-rule dummy:
+rule download_data:
     input:
-        GENESET_CSV
+        expand(OUTPATH+"datasets/{n}/"+GENESET_CSV, n=GENESET_NAME)
 
 rule all:
     input:

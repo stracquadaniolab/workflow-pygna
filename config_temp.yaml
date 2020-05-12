@@ -1,11 +1,12 @@
 parameters:
-    network_file : '../pygna_paper_proj/data/biogrid_3.168_filtered.tsv'
+    network_file : '../pygna_paper_proj/data/external/biogrid_3.168_filtered.tsv'
     sp_matrix: "../pygna_paper_proj/data/interactome_SP.hdf5"
     rwr_matrix: "../pygna_paper_proj/data/interactome_RWR.hdf5"
-    geneset_file: '../pygna_paper_proj/data/bailey.gmt'
+    geneset_file: '../pygna_paper_proj/data/external/bailey.gmt'
     geneset_csv: ''
-    outpath: '../pygna_paper_proj/results/multi/'
     diagnostic_folder: '../pygna_paper_proj/results/multi/figures/'
+    outpath: '../pygna_paper_proj/results/multi/'
+    tcga_dataset: ["TCGA-BRCA", "TCGA-BLCA"]
 
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
