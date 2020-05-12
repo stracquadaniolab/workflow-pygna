@@ -1,12 +1,12 @@
 #options(repos="https://cran.rstudio.com")
-#if (!requireNamespace("BiocManager", quietly = TRUE))
-#  install.packages("BiocManager")
-#BiocManager::install(version = "3.10")
-#BiocManager::install("SummarizedExperiment")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(version = "3.10")
+BiocManager::install("SummarizedExperiment")
 library(SummarizedExperiment)
-#BiocManager::install("TCGAbiolinks")
+BiocManager::install("TCGAbiolinks")
 library(TCGAbiolinks)
-#BiocManager::install("org.Hs.eg.db")
+BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 
 DATAFOLDER= snakemake@params[["folder"]]
