@@ -11,9 +11,16 @@ PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 PROJECT ="TCGA-DLBC"
 #filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
+positive = "TP"
+negative = "NT"
 if (PROJECT %in% c("TCGA-LAML","TCGA-LCML")) {
   sampleType= c("Primary Blood Derived Cancer - Peripheral Blood","Blood Derived Normal")
-} else
+  positive = "TB"
+  negative = "NB"
+} else if (PROJECT == "TCGA-DLBC") {
+  sampleType= c("Primary Tumor","Blood Derived Normal")
+  positive = "TB"
+}else
   sampleType= c("Primary Tumor","Solid Tissue Normal")
 
 print("Downloading data from TCGA...")
@@ -39,11 +46,11 @@ dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm,
 
 print("selection of normal samples 'NT'")
 samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),
-                                   typesample = c("NT"))
+                                   typesample = c(positive))
 
 print("selection of tumor samples 'TP'")
 samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),
-                                   typesample = c("TP"))
+                                   typesample = c(negative))
 
 print("Diff.expr.analysis (DEA)")
 dataDEGs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
