@@ -1,13 +1,10 @@
 #options(repos="https://cran.rstudio.com")
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-BiocManager::install(version = "3.10")
-BiocManager::install("SummarizedExperiment")
-library(SummarizedExperiment)
-BiocManager::install("TCGAbiolinks")
-library(TCGAbiolinks)
-BiocManager::install("org.Hs.eg.db")
-library(org.Hs.eg.db)
+
+requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db")
+for(p in requiredPackages){
+  if(!require(p,character.only = TRUE)) install.packages(p)
+  library(p,character.only = TRUE)
+}
 
 DATAFOLDER= snakemake@params[["folder"]]
 PROJECT = snakemake@params[["name"]]
@@ -20,6 +17,7 @@ if (PROJECT %in% c("TCGA-LAML","TCGA-LCML")) {
   sampleType= c("Primary Tumor","Solid Tissue Normal")
 
 print("Downloading data from TCGA...")
+print(PROJECT)
 query <- GDCquery(project = PROJECT,
                       legacy = TRUE,
                       data.category = "Gene expression",
@@ -56,7 +54,7 @@ dataDEGs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
                             fdr.cut = 1,
                             logFC.cut = 0,
                             method = "glmLRT")
-print("Dataset creation: Start")
+print("-----Dataset creation: Start-----")
 dataset = dataDEGs
 symbols = unlist(c(row.names(dataset)))
 dataset['genes.Entrezid']=mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')
@@ -64,4 +62,4 @@ dataset = dataset[order(dataset$logFC),]
 dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
 write.csv(dataset, OUTPUTFILE)
 
-print("Dataset creation: Done")
+print("-----Dataset creation: Done-----")
