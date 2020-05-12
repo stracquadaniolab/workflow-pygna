@@ -14,7 +14,6 @@ PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 
 #filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
-PROJECT="TCGA-LUSC"
 if (PROJECT %in% c("TCGA-LAML","TCGA-LCML")) {
   sampleType= c("Primary Blood Derived Cancer - Peripheral Blood","Blood Derived Normal")
 } else
