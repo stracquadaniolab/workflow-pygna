@@ -3,7 +3,7 @@ parameters:
     sp_matrix: "../pygna_paper_proj/data/interactome_SP.hdf5"
     rwr_matrix: "../pygna_paper_proj/data/interactome_RWR.hdf5"
     geneset_file: '../pygna_paper_proj/data/external/bailey.gmt'
-    geneset_csv: ''
+    geneset_csv: 'geneset.csv'
     diagnostic_folder: '../pygna_paper_proj/results/multi/figures/'
     outpath: '../pygna_paper_proj/results/multi/'
     tcga_dataset: ["TCGA-BRCA", "TCGA-LAML", "TCGA-PRAD", "TCGA-DLBC", "TCGA-LUSC"]
