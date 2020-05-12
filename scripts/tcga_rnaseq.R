@@ -9,8 +9,8 @@ library(TCGAbiolinks)
 #BiocManager::install("org.Hs.eg.db")
 library(org.Hs.eg.db)
 
-DATAFOLDER= snakemake@params[[1]]
-PROJECT = snakemake@params[[2]]
+DATAFOLDER= snakemake@params[["folder"]]
+PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 
 #filename = paste(DATAFOLDER,"blcaExp.rda",sep = "")
