@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+description: "This script is an exploratory work to analyse which are the sample_types available on the TCGA website using TCGABiolink package"
+---
+Requiring packages
+```{r}
+requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "DT")
+for(p in requiredPackages){
+  if(!require(p,character.only = TRUE)) install.packages(p)
+  library(p,character.only = TRUE)
+}
+```
+Get the projects id
+```{r}
+projects = TCGAbiolinks:::getGDCprojects()$project_id
+tcgaProjects =grepl("TCGA*", projects)
+tcgaProjects = projects[tcgaProjects]
+print(tcgaProjects)
+```
+
+Run the query and print the results
+
+```{r}
+i = 0
+queryRes= c()
+for (p in tcgaProjects) {
+  print(p)
+  queryRes[i] <- GDCquery(project = p,
+                        legacy = TRUE,
+                        data.category = "Gene expression",
+                        data.type = "Gene expression quantification",
+                        platform = "Illumina HiSeq",
+                        file.type = "results",
+                        experimental.strategy = "RNA-Seq")
+  i = i+1
+}
+```
+
+Print the tables of each project
+```{r}
+i = 1
+for (p in tcgaProjects){
+  results = queryRes[i]
+  results = results[[1]][[1]]
+  sampleTypes = results[c("sample_type", "project")]
+  sampleTypes = unique(sampleTypes)
+  print(sampleTypes)
+  i = i+1
+}
+```
+
