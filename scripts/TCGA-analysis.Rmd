@@ -21,7 +21,7 @@ print(tcgaProjects)
 Run the query and print the results
 
 ```{r}
-i = 0
+i = 1
 queryRes= c()
 for (p in tcgaProjects) {
   print(p)
