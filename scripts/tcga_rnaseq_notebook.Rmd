@@ -1,0 +1,104 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Initial definitions
+```{r}
+requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db", "recount", "TCGAutils", "limma", "biomaRt")
+for(p in requiredPackages){
+  if(!require(p,character.only = TRUE)) 
+    install.packages(p)
+  library(p,character.only = TRUE)
+}
+convert.ENSG.Symbol<-function(genes){
+  mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+  G_list <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id","hgnc_symbol"),values=genes,mart= mart)
+  #merge(DEG.ucs,G_list,by.x="gene",by.y="ensembl_gene_id")
+  return(G_list)
+}
+
+getTissue <-function(project) {
+  tissue = NULL
+  switch (project,
+    "TCGA-DLBC" ={tissue ="blood"},
+    "TCGA-LAML" ={tissue ="blood"},
+    "TCGA-LCML" ={tissue ="blood"},
+    "TCGA-BRCA" ={tissue ="breast"}
+    )
+  return(tissue)
+}
+```
+
+
+Common init
+```{r}
+PROJECT="TCGA-LAML"
+tissue=getTissue(PROJECT)
+GTEX = paste("GTEX_",tissue,sep="")
+TCGA = paste("TCGA_",tissue,sep="")
+alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-BRCA")
+
+# Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
+ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
+eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts
+rse_scaled <- scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE)
+rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
+```
+
+Download part
+```{r}
+query<- GDCquery(project = PROJECT,
+                     data.category = "Transcriptome Profiling",
+                     data.type = "Gene Expression Quantification",
+                     workflow.type = "HTSeq - Counts")
+GDCdownload(query)
+experiment <- GDCprepare(query = query)
+```
+
+Develop same ending
+```{r}
+e = assay(experiment)
+
+```
+
+Saving dataset this part should output the same as the above
+```{r}
+ucs.recount.tcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)  
+eset.tcga<-assays(scale_counts(ucs.recount.tcga[[TCGA]], round = TRUE))$counts
+colnames(eset.tcga)<-colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+rownames(eset.tcga) <- gsub("\\..*", "", rownames(eset.tcga))
+```
+
+Common part again
+```{r}
+# eset.tcga.cancer<-eset.tcga[,which(colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.sample_type=="Primary Tumor")]
+eset.tcga.cancer <- e
+##merging data by row names
+dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
+
+rownames(dataPrep.ucs)<-dataPrep.ucs$Row.names
+dataPrep.ucs$Row.names<-NULL
+
+dataNorm.ucs <- TCGAanalyze_Normalization(tabDF = dataPrep.ucs,
+                                          geneInfo = geneInfoHT,
+                                          method = "gcContent")
+
+dataFilt.ucs <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs,
+                                      method = "quantile", 
+                                      qnt.cut =  0.25)
+
+###set "metadata" argument to true when dealing with TCGA data
+#in order to extract batch correction data
+#processing 90 normal and 610 tumor samples on 17443 miRNA or genes
+DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
+                            mat2 = dataFilt.ucs[,colnames(eset.tcga.cancer)],
+                            metadata =FALSE,
+                            pipeline="limma",
+                            voom = TRUE,
+                            Cond1type = "Normal",
+                            Cond2type = "Tumor",
+                            fdr.cut = 0.01 ,
+                            logFC.cut = 1,
+                            method = "glmLRT")
+```
+

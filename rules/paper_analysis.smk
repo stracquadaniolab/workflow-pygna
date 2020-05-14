@@ -10,7 +10,7 @@ rule generate_data:
         name= "{n}",
         folder= OUTPATH+"datasets/{n}"
     script:
-        "../scripts/tcga_rnaseq.R"
+        "../scripts/tcga-download.R"
 
 
 rule generate_gmt:
