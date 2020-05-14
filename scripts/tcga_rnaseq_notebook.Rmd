@@ -7,8 +7,13 @@ Initial definitions
 requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db", "recount", "TCGAutils", "limma", "biomaRt")
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) 
-    install.packages(p)
-  library(p,character.only = TRUE)
+    res = tryCatch({
+      install.packages(p)  
+    }, error = function(e) {
+      BiocManager::install(p) 
+    }, finally = {
+      library(p,character.only = TRUE)
+    })
 }
 convert.ENSG.Symbol<-function(genes){
   mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))

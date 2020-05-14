@@ -1,6 +1,6 @@
 #!/bin/sh
 # Grid Engine options (lines prefixed with #$)
-#$ -N project-network-gan
+#$ -N workflow-pygna
 #$ -cwd
 #$ -l h_rt=200:00:00
 #$ -M fabio.cassano@ed.ac.uk
