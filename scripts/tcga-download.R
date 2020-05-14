@@ -73,7 +73,7 @@ if (PROJECT %in% alternate) {
 
 ##merging data by row names
 print("Performing data preparaton")
-dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0, all=TRUE)
+dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
 
 rownames(dataPrep.ucs)<-dataPrep.ucs$Row.names
 dataPrep.ucs$Row.names<-NULL

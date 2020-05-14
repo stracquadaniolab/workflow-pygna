@@ -1793,9 +1793,15 @@ getTissue &lt;-function(project) {
 <p>Common init</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUFJPSkVDVD1cIlRDR0EtTEFNTFwiXG50aXNzdWU9Z2V0VGlzc3VlKFBST0pFQ1QpXG5HVEVYID0gcGFzdGUoXCJHVEVYX1wiLHRpc3N1ZSxzZXA9XCJcIilcblRDR0EgPSBwYXN0ZShcIlRDR0FfXCIsdGlzc3VlLHNlcD1cIlwiKVxuYWx0ZXJuYXRlID0gYyhcIlRDR0EtRExCQ1wiLFwiVENHQS1MQU1MXCIsXCJUQ0dBLUxDTUxcIiwgXCJUQ0dBLUJSQ0FcIilcblxuIyBTdGFydCB0aGUgZWxhYm9yYXRpb24gZm9yIHRoZSBHVEVYICh3aGljaCBpcyBjb21tb24gdG8gYWxsIGNhc2VzLCBhcyBpdCBjb250YWlucyBub3JtYWwgY2VsbHMpXG51Y3MucmVjb3VudC5ndGV4PC1UQ0dBcXVlcnlfcmVjb3VudDIocHJvamVjdD1cIkdURVhcIiwgdGlzc3VlPXRpc3N1ZSlcbmBgYCJ9 -->
-<pre class="r"><code>PROJECT=&quot;TCGA-LAML&quot;
-tissue=getTissue(PROJECT)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUFJPSkVDVD1cIlRDR0EtTENNTFwiXG5gYGAifQ== -->
+<pre class="r"><code>PROJECT=&quot;TCGA-LCML&quot;</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZyBtZXNzYWdlOlxuSW4gcmVhZENoYXIoZmlsZSwgc2l6ZSwgVFJVRSkgOiB0cnVuY2F0aW5nIHN0cmluZyB3aXRoIGVtYmVkZGVkIG51bHNcbiJ9 -->
+<pre><code>Warning message:
+In readChar(file, size, TRUE) : truncating string with embedded nuls</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGlzc3VlPWdldFRpc3N1ZShQUk9KRUNUKVxuR1RFWCA9IHBhc3RlKFwiR1RFWF9cIix0aXNzdWUsc2VwPVwiXCIpXG5UQ0dBID0gcGFzdGUoXCJUQ0dBX1wiLHRpc3N1ZSxzZXA9XCJcIilcbmFsdGVybmF0ZSA9IGMoXCJUQ0dBLURMQkNcIixcIlRDR0EtTEFNTFwiLFwiVENHQS1MQ01MXCIsIFwiVENHQS1CUkNBXCIpXG5cbiMgU3RhcnQgdGhlIGVsYWJvcmF0aW9uIGZvciB0aGUgR1RFWCAod2hpY2ggaXMgY29tbW9uIHRvIGFsbCBjYXNlcywgYXMgaXQgY29udGFpbnMgbm9ybWFsIGNlbGxzKVxudWNzLnJlY291bnQuZ3RleDwtVENHQXF1ZXJ5X3JlY291bnQyKHByb2plY3Q9XCJHVEVYXCIsIHRpc3N1ZT10aXNzdWUpXG5gYGAifQ== -->
+<pre class="r"><code>tissue=getTissue(PROJECT)
 GTEX = paste(&quot;GTEX_&quot;,tissue,sep=&quot;&quot;)
 TCGA = paste(&quot;TCGA_&quot;,tissue,sep=&quot;&quot;)
 alternate = c(&quot;TCGA-DLBC&quot;,&quot;TCGA-LAML&quot;,&quot;TCGA-LCML&quot;, &quot;TCGA-BRCA&quot;)
