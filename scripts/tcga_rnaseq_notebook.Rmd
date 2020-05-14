@@ -98,12 +98,22 @@ dataFilt.ucs <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs,
 DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
                             mat2 = dataFilt.ucs[,colnames(eset.tcga.cancer)],
                             metadata =FALSE,
-                            pipeline="limma",
-                            voom = TRUE,
                             Cond1type = "Normal",
                             Cond2type = "Tumor",
-                            fdr.cut = 0.01 ,
-                            logFC.cut = 1,
+                            fdr.cut = 1 ,
+                            logFC.cut = 0,
                             method = "glmLRT")
+```
+Create the dataset
+```{r}
+dataset = DEG.ucs
+symbols = unlist(c(row.names(dataset)))
+dataset['genes.Entrezid']= tryCatch({
+  mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')},
+  error = function(e) {
+    mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'ENSEMBL')}
+  )
+dataset = dataset[order(dataset$logFC),]
+dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
 ```
 

@@ -99,7 +99,11 @@ DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
 print("-----Dataset creation: Start-----")
 dataset = DEG.ucs
 symbols = unlist(c(row.names(dataset)))
-dataset['genes.Entrezid']=mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')
+dataset['genes.Entrezid']= tryCatch({
+  mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')},
+  error = function(e) {
+    mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'ENSEMBL')}
+)
 dataset = dataset[order(dataset$logFC),]
 dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
 write.csv(dataset, OUTPUTFILE)
