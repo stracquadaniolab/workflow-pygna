@@ -37,11 +37,11 @@ OUTPUTFILE= snakemake@output[[1]]
 
 ###################################
 alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-LUSC")
-PROJECT="TCGA-DLBC"
 tissue=getTissue(PROJECT)
 GTEX = paste("GTEX_",tissue,sep="")
 TCGA = paste("TCGA_",tissue,sep="")
 
+print(PROJECT)
 # Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
 print("Downloading data from GTEX")
 ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)

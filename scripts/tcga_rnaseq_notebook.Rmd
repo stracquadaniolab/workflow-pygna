@@ -41,7 +41,7 @@ PROJECT="TCGA-LAML"
 tissue=getTissue(PROJECT)
 GTEX = paste("GTEX_",tissue,sep="")
 TCGA = paste("TCGA_",tissue,sep="")
-alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-BRCA")
+alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-LUSC")
 
 # Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
 ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
