@@ -37,7 +37,7 @@ getTissue <-function(project) {
 
 Common init
 ```{r}
-PROJECT="TCGA-LAML"
+PROJECT="TCGA-LCML"
 tissue=getTissue(PROJECT)
 GTEX = paste("GTEX_",tissue,sep="")
 TCGA = paste("TCGA_",tissue,sep="")
