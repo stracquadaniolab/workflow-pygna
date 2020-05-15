@@ -25,24 +25,26 @@ convert.ENSG.Symbol<-function(genes){
 getTissue <-function(project) {
   tissue = NULL
   switch (project,
-    "TCGA-DLBC" ={tissue ="blood"},
-    "TCGA-LAML" ={tissue ="blood"},
-    "TCGA-LCML" ={tissue ="blood"},
-    "TCGA-BRCA" ={tissue ="breast"}
+    "TCGA-DLBC" ={tissue ="blood"},    #Lymphoma
+    "TCGA-LUSC" ={tissue ="lung"},     #Lung
+    "TCGA-LAML" ={tissue ="blood"},    #Leukemia
+    "TCGA-LCML" ={tissue ="blood"},    #Myelogenous Leukemia
+    "TCGA-PRAD" ={tissue ="prostate"}, #Prostate
+    "TCGA-BRCA" ={tissue ="breast"}    #Breast
     )
   return(tissue)
 }
-```
 
-
-Common init
-```{r}
 PROJECT="TCGA-LCML"
 tissue=getTissue(PROJECT)
 GTEX = paste("GTEX_",tissue,sep="")
 TCGA = paste("TCGA_",tissue,sep="")
 alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-LUSC")
+```
 
+
+Common init
+```{r}
 # Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
 ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
 eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts

@@ -11,22 +11,16 @@ for(p in requiredPackages){
   }
   library(p,character.only = TRUE)
 }
-convert.ENSG.Symbol<-function(genes){
-  mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
-  G_list <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id","hgnc_symbol"),values=genes,mart= mart)
-  #merge(DEG.ucs,G_list,by.x="gene",by.y="ensembl_gene_id")
-  return(G_list)
-}
 
 getTissue <-function(project) {
   tissue = NULL
   switch (project,
-    "TCGA-DLBC" ={tissue ="blood"},
-    "TCGA-LUSC" ={tissue ="blood"},
-    "TCGA-LAML" ={tissue ="blood"},
-    "TCGA-LCML" ={tissue ="blood"},
-    "TCGA-PRAD" ={tissue ="prostate"},
-    "TCGA-BRCA" ={tissue ="breast"}
+    "TCGA-DLBC" ={tissue ="blood"},    #Lymphoma
+    "TCGA-LUSC" ={tissue ="lung"},     #Lung
+    "TCGA-LAML" ={tissue ="blood"},    #Leukemia
+    "TCGA-LCML" ={tissue ="blood"},    #Myelogenous Leukemia
+    "TCGA-PRAD" ={tissue ="prostate"}, #Prostate
+    "TCGA-BRCA" ={tissue ="breast"}    #Breast
     )
   return(tissue)
 }
@@ -51,7 +45,7 @@ rse_scaled <- scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE)
 rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
 
 # Start the elaboration on TCGA (there are only tumor samples)
-if (PROJECT %in% alternate) {
+#if (PROJECT %in% alternate) {
   print("Downloading data from TCGA [alternate version]")
   query<- GDCquery(project = PROJECT,
                    data.category = "Transcriptome Profiling",
@@ -60,16 +54,15 @@ if (PROJECT %in% alternate) {
   GDCdownload(query)
   experiment <- GDCprepare(query = query)
   eset.tcga.cancer = assay(experiment)
-} else {
-  print("Downloading data from TCGA")
-  ucs.recount.tcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)  
-  SE.ucs.recount.tcga <- ucs.recount.tcga[[TCGA]]
-  eset.tcga<-assays(scale_counts(ucs.recount.tcga[[TCGA]], round = TRUE))$counts
-  colnames(eset.tcga)<-colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
-  rownames(eset.tcga) <- gsub("\\..*", "", rownames(eset.tcga))
-  eset.tcga.cancer<-eset.tcga[,which(colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.sample_type=="Primary Tumor")]
-}
-
+#} else {
+#  print("Downloading data from TCGA")
+#  ucs.recount.tcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)  
+#  SE.ucs.recount.tcga <- ucs.recount.tcga[[TCGA]]
+#  eset.tcga<-assays(scale_counts(ucs.recount.tcga[[TCGA]], round = TRUE))$counts
+#  colnames(eset.tcga)<-colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+#  rownames(eset.tcga) <- gsub("\\..*", "", rownames(eset.tcga))
+#  eset.tcga.cancer<-eset.tcga[,which(colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.sample_type=="Primary Tumor")]
+#}
 
 ##merging data by row names
 print("Performing data preparaton")
@@ -94,7 +87,6 @@ DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
                             fdr.cut = 1 ,
                             logFC.cut = 0,
                             method = "glmLRT")
-
 
 print("-----Dataset creation: Start-----")
 dataset = DEG.ucs

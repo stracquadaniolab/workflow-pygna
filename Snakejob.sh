@@ -9,7 +9,7 @@
 source ~fcassano/.bashrc
 conda activate pygna
 
-snakemake --snakefile Snakefile_paper --configfile config_paper_multi.yaml --cores 2
+snakemake --snakefile Snakefile_paper --configfile config_paper_multi.yaml --cores 1
 
 source deactivate
 module unload anaconda
