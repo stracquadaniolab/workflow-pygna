@@ -35,7 +35,7 @@ getTissue <-function(project) {
   return(tissue)
 }
 
-PROJECT="TCGA-LCML"
+PROJECT="TCGA-BRCA"
 tissue=getTissue(PROJECT)
 GTEX = paste("GTEX_",tissue,sep="")
 TCGA = paste("TCGA_",tissue,sep="")
@@ -45,77 +45,67 @@ alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-LUSC")
 
 Common init
 ```{r}
-# Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
-ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
-eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts
-rse_scaled <- scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE)
-rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
-```
-
-Download part
-```{r}
+print(PROJECT)
+# Start the elaboration on TCGA (there are only tumor samples)
+print("Downloading data from TCGA")
 query<- GDCquery(project = PROJECT,
-                     data.category = "Transcriptome Profiling",
-                     data.type = "Gene Expression Quantification",
-                     workflow.type = "HTSeq - Counts")
+                 data.category = "Transcriptome Profiling",
+                 data.type = "Gene Expression Quantification",
+                 workflow.type = "HTSeq - Counts")
 GDCdownload(query)
 experiment <- GDCprepare(query = query)
+eset.tcga.cancer = assay(experiment)
 ```
-
-Develop same ending
+If Project in alternate - download
 ```{r}
-e = assay(experiment)
-
+  print("No normal-tissue from TCGA: downloading data from GTEX")
+  ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
+  SE.ucs.recount.gtex <- ucs.recount.gtex[[GTEX]]
+  eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts
 ```
 
-Saving dataset this part should output the same as the above
+elaborate part
 ```{r}
-ucs.recount.tcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)  
-eset.tcga<-assays(scale_counts(ucs.recount.tcga[[TCGA]], round = TRUE))$counts
-colnames(eset.tcga)<-colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
-rownames(eset.tcga) <- gsub("\\..*", "", rownames(eset.tcga))
+
+  rse_scaled <- scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE)
+  rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
+  ##merging data by row names
+  print("Performing data preparaton")
+  dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
+  rownames(dataPrep.ucs)<-dataPrep.ucs$Row.names
+  dataPrep.ucs$Row.names<-NULL
+  print("Performing data normalization")
+  dataNorm.ucs <- TCGAanalyze_Normalization(tabDF = dataPrep.ucs,
+                                            geneInfo = geneInfoHT)
+  print("Performing data filtering")
+  dataFilt.ucs <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs,
+                                        method = "quantile", 
+                                        qnt.cut =  0.25)
+  print("Performing DEA")
+  DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
+                              mat2 = dataFilt.ucs[,colnames(eset.tcga.cancer)],
+                              Cond1type = "Normal",
+                              Cond2type = "Tumor",
+                              fdr.cut = 1 ,
+                              logFC.cut = 0,
+                              method = "glmLRT")
 ```
 
-Common part again
+Else.... 
 ```{r}
-# eset.tcga.cancer<-eset.tcga[,which(colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.sample_type=="Primary Tumor")]
-eset.tcga.cancer <- e
-##merging data by row names
-dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
-
-rownames(dataPrep.ucs)<-dataPrep.ucs$Row.names
-dataPrep.ucs$Row.names<-NULL
-
-dataNorm.ucs <- TCGAanalyze_Normalization(tabDF = dataPrep.ucs,
-                                          geneInfo = geneInfoHT,
-                                          method = "gcContent")
-
-dataFilt.ucs <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs,
-                                      method = "quantile", 
-                                      qnt.cut =  0.25)
-
-###set "metadata" argument to true when dealing with TCGA data
-#in order to extract batch correction data
-#processing 90 normal and 610 tumor samples on 17443 miRNA or genes
-DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
-                            mat2 = dataFilt.ucs[,colnames(eset.tcga.cancer)],
-                            metadata =FALSE,
-                            Cond1type = "Normal",
-                            Cond2type = "Tumor",
-                            fdr.cut = 1 ,
-                            logFC.cut = 0,
-                            method = "glmLRT")
+  print("Normal tissue found in TCGA")
+  print("Performing data normalization")
+  dataNorm <- TCGAanalyze_Normalization(tabDF = eset.tcga.cancer, geneInfo =  geneInfoHT)
+  print("Performing data filtering")
+  dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm,method = "quantile",qnt.cut =  0.25)
+  print("Performing DEA")
+  samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
+  samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
+  DEG.ucs2 <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
+                              mat2 = dataFilt[,samplesTP],
+                              Cond1type = "Normal",
+                              Cond2type = "Tumor",
+                              fdr.cut = 1,
+                              logFC.cut = 0,
+                              method = "glmLRT")
 ```
-Create the dataset
-```{r}
-dataset = DEG.ucs
-symbols = unlist(c(row.names(dataset)))
-dataset['genes.Entrezid']= tryCatch({
-  mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')},
-  error = function(e) {
-    mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'ENSEMBL')}
-  )
-dataset = dataset[order(dataset$logFC),]
-dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
-```
-
