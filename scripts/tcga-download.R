@@ -25,9 +25,9 @@ getTissue <-function(project) {
   return(tissue)
 }
 
-#DATAFOLDER= snakemake@params[["folder"]]
-#PROJECT = snakemake@params[["name"]]
-#OUTPUTFILE= snakemake@output[[1]]
+DATAFOLDER= snakemake@params[["folder"]]
+PROJECT = snakemake@params[["name"]]
+OUTPUTFILE= snakemake@output[[1]]
 
 ###################################
 
