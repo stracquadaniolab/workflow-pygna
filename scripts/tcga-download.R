@@ -25,35 +25,45 @@ getTissue <-function(project) {
   return(tissue)
 }
 
-DATAFOLDER= snakemake@params[["folder"]]
-PROJECT = snakemake@params[["name"]]
-OUTPUTFILE= snakemake@output[[1]]
+#DATAFOLDER= snakemake@params[["folder"]]
+#PROJECT = snakemake@params[["name"]]
+#OUTPUTFILE= snakemake@output[[1]]
 
 ###################################
-alternate = c("TCGA-DLBC","TCGA-LAML","TCGA-LCML", "TCGA-LUSC")
-tissue=getTissue(PROJECT)
-GTEX = paste("GTEX_",tissue,sep="")
-TCGA = paste("TCGA_",tissue,sep="")
 
-print(PROJECT)
-# Start the elaboration on TCGA (there are only tumor samples)
-print("Downloading data from TCGA")
+# Let's query TCGA to see if it has both TP and NP
 query<- GDCquery(project = PROJECT,
                  data.category = "Transcriptome Profiling",
                  data.type = "Gene Expression Quantification",
                  workflow.type = "HTSeq - Counts")
-GDCdownload(query)
-experiment <- GDCprepare(query = query)
-eset.tcga.cancer = assay(experiment)
+results = query[[1]][[1]]
+sampleTypes = results[c("sample_type")]
+sampleTypes = unique(sampleTypes)
 
-# Start the elaboration for the GTEX (which is common to all cases, as it contains normal cells)
-if (PROJECT %in% alternate) {
+downloadFromTcga = FALSE
+if ("Primary Tumor" %in% sampleTypes$sample_type) {
+  if ("Solid Tissue Normal" %in% sampleTypes$sample_type){
+    downloadFromTcga = TRUE
+  }
+}
+
+print(PROJECT)
+
+if (!downloadFromTcga) {
+  tissue=getTissue(PROJECT)
+  GTEX = paste("GTEX_",tissue,sep="")
   print("No normal-tissue from TCGA: downloading data from GTEX")
   ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
+  
   SE.ucs.recount.gtex <- ucs.recount.gtex[[GTEX]]
+  
   eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts
+
+  
   rse_scaled <- scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE)
+  
   rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
+
   ##merging data by row names
   print("Performing data preparaton")
   dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
@@ -64,7 +74,7 @@ if (PROJECT %in% alternate) {
   print("Performing data filtering")
   dataFilt.ucs <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
-  DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt.ucs[,colnames(eset.gtex)],
+  DEG.ucs3 <- TCGAanalyze_DEA(mat1 = dataFilt.ucs[,colnames(eset.gtex)],
                               mat2 = dataFilt.ucs[,colnames(eset.tcga.cancer)],
                               Cond1type = "Normal",
                               Cond2type = "Tumor",
@@ -72,6 +82,11 @@ if (PROJECT %in% alternate) {
                               logFC.cut = 0,
                               method = "glmLRT")
 } else {
+  # Start the elaboration on TCGA (there are only tumor samples)
+  print("Downloading data from TCGA")
+  GDCdownload(query)
+  experiment <- GDCprepare(query = query)
+  eset.tcga.cancer = assay(experiment)
   print("Normal tissue found in TCGA")
   print("Performing data normalization")
   dataNorm <- TCGAanalyze_Normalization(tabDF = eset.tcga.cancer, geneInfo =  geneInfoHT)
@@ -80,7 +95,7 @@ if (PROJECT %in% alternate) {
   print("Performing DEA")
   samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
   samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
-  DEG.ucs <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
+  DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt[,samplesNT],
                               mat2 = dataFilt[,samplesTP],
                               Cond1type = "Normal",
                               Cond2type = "Tumor",
