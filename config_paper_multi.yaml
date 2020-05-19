@@ -6,7 +6,7 @@ parameters:
     geneset_csv: 'geneset.csv'
     diagnostic_folder: '../pygna_paper_proj/results/multi/figures/'
     outpath: '../pygna_paper_proj/results/multi/'
-    tcga_dataset: ["TCGA-BRCA", "TCGA-PRAD", "TCGA-LUSC", "TCGA-LAML", "TCGA-DBLC", "TCGA-LCML"]
+    tcga_dataset: ["TCGA-BRCA", "TCGA-PRAD", "TCGA-LUSC", "TCGA-LAML", "TCGA-DLBC", "TCGA-LCML"]
     
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
