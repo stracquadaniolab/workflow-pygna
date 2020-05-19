@@ -150,9 +150,6 @@ dataset['genes.Entrezid']= tryCatch({
 )
 dataset = dataset[order(dataset$logFC),]
 dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
-OUTPUTFILE = lapply(OUTPUTFILE, tolower)
-OUTPUTFILE = str_replace(OUTPUTFILE,"-","_")
 write.csv(dataset, OUTPUTFILE)
 print("-----Dataset creation: Done-----")
-
 write.csv(log,LOGFILE)
