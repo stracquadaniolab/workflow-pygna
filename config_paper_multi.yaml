@@ -5,7 +5,7 @@ parameters:
     geneset_file: '../pygna_paper_proj/data/external/bailey.gmt'
     geneset_csv: 'geneset.csv'
     diagnostic_folder: '../pygna_paper_proj/results/multi/figures/'
-    outpath: '../pygna_paper_proj/results/multi/'
+    outpath: '../pygna_paper_proj/results/genesets/'
     tcga_dataset: ["TCGA-BRCA", "TCGA-PRAD", "TCGA-LUSC", "TCGA-LAML", "TCGA-DLBC", "TCGA-LCML"]
     
 topology:
