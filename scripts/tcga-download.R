@@ -1,6 +1,6 @@
 ####IMPORTANT! Please download the github version to use the most recent version of TCGAbiolinks
 ###Use devtools::install_github(repo = "ELELAB/TCGAbiolinks")
-requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db", "recount", "TCGAutils", "limma", "biomaRt")
+requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db", "recount", "TCGAutils", "limma", "biomaRt", "stringr")
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) {
     res = tryCatch({
@@ -52,11 +52,13 @@ getTissue <-function(project) {
   return(data)
 }
 
-DATAFOLDER= snakemake@params[["folder"]]
 PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 LOGFILE = snakemake@output[[2]]
 ###################################
+
+PROJECT = toupper(PROJECT)
+PROJECT = str_replace(PROJECT,"_","-")
 
 # Let's query TCGA to see if it has both TP and NP
 
