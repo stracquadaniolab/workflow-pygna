@@ -60,8 +60,9 @@ LOGFILE = snakemake@output[[2]]
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
 data = getTissue(PROJECT)
-# Let's query TCGA to see if it has both TP and NP
 
+
+# Let's query TCGA to see if it has both TP and NP
 downloadFromTcga = tryCatch({query =  GDCquery(project = PROJECT,
                                       data.category = "Transcriptome Profiling",
                                       data.type = "Gene Expression Quantification",
