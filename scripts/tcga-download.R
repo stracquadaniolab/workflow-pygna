@@ -52,11 +52,11 @@ getTissue <-function(project) {
   return(data)
 }
 
-#PROJECT = snakemake@params[["name"]]
-#OUTPUTFILE= snakemake@output[[1]]
-#LOGFILE = snakemake@output[[2]]
+PROJECT = snakemake@params[["name"]]
+OUTPUTFILE= snakemake@output[[1]]
+LOGFILE = snakemake@output[[2]]
 ###################################
-PROJECT = "TCGA-LAML"
+
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
 data = getTissue(PROJECT)
