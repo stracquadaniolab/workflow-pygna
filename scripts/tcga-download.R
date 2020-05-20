@@ -17,8 +17,8 @@ elaborateTcga <- function(query) {
   print("Downloading data from TCGA")
   GDCdownload(query)
   experiment <- GDCprepare(query = query)
-  log["PT"] = count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
-  log["NT"] = count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[3])
+  log["PT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
+  log["NT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[3])
   eset.tcga.cancer = assay(experiment)
   print("Normal tissue found in TCGA")
   print("Performing data normalization")
@@ -52,14 +52,14 @@ getTissue <-function(project) {
   return(data)
 }
 
-PROJECT = snakemake@params[["name"]]
-OUTPUTFILE= snakemake@output[[1]]
-LOGFILE = snakemake@output[[2]]
+#PROJECT = snakemake@params[["name"]]
+#OUTPUTFILE= snakemake@output[[1]]
+#LOGFILE = snakemake@output[[2]]
 ###################################
-
+PROJECT = "TCGA-LAML"
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
-
+data = getTissue(PROJECT)
 # Let's query TCGA to see if it has both TP and NP
 
 downloadFromTcga = tryCatch({query =  GDCquery(project = PROJECT,
@@ -69,8 +69,8 @@ downloadFromTcga = tryCatch({query =  GDCquery(project = PROJECT,
           results = query[[1]][[1]]
           sampleTypes = results[c("sample_type")]
           sampleTypes = unique(sampleTypes)
-          if ("Primary Tumor" %in% sampleTypes$sample_type) 
-            if ("Solid Tissue Normal" %in% sampleTypes$sample_type)
+          if (data[[2]] %in% sampleTypes$sample_type) 
+            if (data[[3]] %in% sampleTypes$sample_type)
               downloadFromTcga = query
             else 
               downloadFromTcga = "Part"
@@ -93,7 +93,6 @@ if (typeof(downloadFromTcga) == "list") {
   DEG.ucs = elaborateTcga(query = query)
 } else {
   # NT from GTEX
-  data = getTissue(PROJECT)
   log["Tissue"] = data
   log["NTSource"] = "GTEX"
   tissue = data[[1]]
@@ -152,6 +151,9 @@ dataset['genes.Entrezid']= tryCatch({
 )
 dataset = dataset[order(dataset$logFC),]
 dataset["significant"] = as.double(abs(dataset$logFC)>=3 & dataset$FDR<0.01)
+log["significant"] = count(c(dataset["significant"]==1))
+log["not_significant"] = count(c(dataset["significant"]==0))
+log["total"] = nrow(dataset)
 write.csv(dataset, OUTPUTFILE)
 print("-----Dataset creation: Done-----")
 write.csv(log,LOGFILE)
