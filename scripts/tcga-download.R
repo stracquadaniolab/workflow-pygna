@@ -42,7 +42,7 @@ elaborateTcga <- function(query) {
 getTissue <-function(project) {
   data = NULL
   switch (project,
-    "TCGA-DLBC" ={data = list("blood","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Lymphoma
+    "TCGA-DLBC" ={data = list("blood","Primary Tumor", "Blood Derived Normal")},    #Lymphoma
     "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")},                                             #Lung
     "TCGA-LAML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Leukemia
     "TCGA-LCML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Myelogenous Leukemia
