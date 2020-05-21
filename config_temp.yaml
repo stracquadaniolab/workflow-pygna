@@ -14,7 +14,7 @@ topology:
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : '../pygna_paper_proj/data/external/disgenet_cancer_entrez.gmt'
+    geneset_B : '../pygna_paper_proj/data/external/goslim.gmt'
     number_of_permutations: 100
     cores: 1
 

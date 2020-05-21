@@ -94,7 +94,7 @@ if (typeof(downloadFromTcga) == "list") {
   DEG.ucs = elaborateTcga(query = query)
 } else {
   # NT from GTEX
-  log["Tissue"] = data
+  log["Tissue"] = data[[1]]
   log["NTSource"] = "GTEX"
   tissue = data[[1]]
   GTEX = paste("GTEX_",tissue,sep="")
