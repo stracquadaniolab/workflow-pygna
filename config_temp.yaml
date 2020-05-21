@@ -14,7 +14,7 @@ topology:
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : ["tcga_brca", "tcga_prad", "tcga_lusc", "tcga_laml", "tcga_dlbc", "tcga_lcml"]
+    geneset_B : '../pygna_paper_proj/data/external/disgenet_cancer_entrez.gmt'
     number_of_permutations: 100
     cores: 1
 

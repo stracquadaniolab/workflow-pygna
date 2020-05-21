@@ -120,13 +120,13 @@ rule association_RW:
     input:
         network=NETWORK,
         A=OUTPATH+"{n}/{n}.gmt",
-        B=OUTPATH+"{m}/{m}.gmt",
+        B=GENESETB,
         matrix=RWR_MATRIX
     params:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"{n}/{m}/table_association_rwr.csv"
+	    OUTPATH+"{n}/table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
@@ -137,14 +137,14 @@ rule association_SP:
     input:
         network=NETWORK,
         A=OUTPATH+"{n}/{n}.gmt",
-        B=OUTPATH+"{m}/{m}.gmt",
+        B=GENESETB,
         matrix=SP_MATRIX
     params:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"],
         diagnostic_folder = config["parameters"]["outpath"]
     output:
-	    OUTPATH+"{n}/{m}/table_association_sp.csv"
+	    OUTPATH+"{n}/table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
