@@ -46,7 +46,7 @@ rule generate_matrix_rwr:
 rule topology_module:
     input:
         network=NETWORK,
-        geneset=OUTPATH+"{n}/{n}.csv"
+        geneset=OUTPATH+"{n}/{n}.gmt"
     output:
         OUTPATH+"{n}/table_topology_module.csv"
     params:
@@ -61,7 +61,7 @@ rule topology_module:
 rule topology_internal_degree:
     input:
         network=NETWORK,
-        geneset=OUTPATH+"{n}/{n}.csv"
+        geneset=OUTPATH+"{n}/{n}.gmt"
     output:
         OUTPATH+"{n}/table_topology_internal_degree.csv"
     params:
@@ -75,7 +75,7 @@ rule topology_internal_degree:
 rule topology_total_degree:
     input:
         network=NETWORK,
-        geneset=OUTPATH+"{n}/{n}.csv"
+        geneset=OUTPATH+"{n}/{n}.gmt"
     params:
         nop=config["topology"]["number_of_permutations"],
         cores=config["topology"]["cores"],
@@ -89,7 +89,7 @@ rule topology_total_degree:
 rule topology_sp:
     input:
         network=NETWORK,
-        geneset=OUTPATH+"{n}/{n}.csv",
+        geneset=OUTPATH+"{n}/{n}.gmt",
         matrix=SP_MATRIX
     params:
         nop=config["topology"]["number_of_permutations"],
@@ -104,7 +104,7 @@ rule topology_sp:
 rule topology_rwr:
     input:
         network=NETWORK,
-        geneset=OUTPATH+"{n}/{n}.csv",
+        geneset=OUTPATH+"{n}/{n}.gmt",
         matrix=RWR_MATRIX
     params:
         nop=config["topology"]["number_of_permutations"],
@@ -119,8 +119,8 @@ rule topology_rwr:
 rule association_RW:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.csv",
-        B=OUTPATH+"{m}/{m}.csv",
+        A=OUTPATH+"{n}/{n}.gmt",
+        B=OUTPATH+"{m}/{m}.gmt",
         matrix=RWR_MATRIX
     params:
         nop=config["association"]["number_of_permutations"],
@@ -136,8 +136,8 @@ rule association_RW:
 rule association_SP:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.csv",
-        B=OUTPATH+"{m}/{m}.csv",
+        A=OUTPATH+"{n}/{n}.gmt",
+        B=OUTPATH+"{m}/{m}.gmt",
         matrix=SP_MATRIX
     params:
         nop=config["association"]["number_of_permutations"],
@@ -154,7 +154,7 @@ rule association_SP:
 rule test_diffusion_hotnet:
     input:
         network=NETWORK,
-        A=OUTPATH+ "{n}/{n}.csv",
+        A=OUTPATH+ "{n}/{n}.gmt",
         matrix=RWR_MATRIX,
     params:
         nop=config["within_comparison"]["number_of_permutations"],
@@ -170,7 +170,7 @@ rule test_diffusion_hotnet:
 rule within_comparison_RW:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.csv",
+        A=OUTPATH+"{n}/{n}.gmt",
         matrix=RWR_MATRIX
     params:
         nop=config["within_comparison"]["number_of_permutations"],
@@ -185,7 +185,7 @@ rule within_comparison_RW:
 rule within_comparison_SP:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.csv",
+        A=OUTPATH+"{n}/{n}.gmt",
         matrix=SP_MATRIX
     params:
         nop=config["within_comparison"]["number_of_permutations"],
