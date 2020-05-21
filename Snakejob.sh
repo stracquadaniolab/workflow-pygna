@@ -9,7 +9,7 @@
 source ~fcassano/.bashrc
 conda activate pygna
 
-snakemake  snakemake --snakefile Snakefile --cores 6
+snakemake --snakefile Snakefile --cores 6
 
 source deactivate
 module unload anaconda
