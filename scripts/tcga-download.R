@@ -19,35 +19,35 @@ elaborateTcga <- function(query) {
   experiment <- GDCprepare(query = query)
   log["PT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
   log["NT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[3])
-  eset.tcga.cancer = assay(experiment)
+  tcgaDf.cancer = assay(experiment)
   print("Normal tissue found in TCGA")
   print("Performing data normalization")
-  dataNorm <- TCGAanalyze_Normalization(tabDF = eset.tcga.cancer, geneInfo =  geneInfoHT)
+  dataNorm <- TCGAanalyze_Normalization(tabDF = tcgaDf.cancer, geneInfo =  geneInfoHT)
   print("Performing data filtering")
   dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
   samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
   samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
-  DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt[,samplesNT],
+  DEG <- TCGAanalyze_DEA( mat1 = dataFilt[,samplesNT],
                               mat2 = dataFilt[,samplesTP],
                               Cond1type = "Normal",
                               Cond2type = "Tumor",
                               fdr.cut = 1,
                               logFC.cut = 0,
                               method = "glmLRT")
-  return (DEG.ucs)
+  return (DEG)
 }
 
 
 getTissue <-function(project) {
   data = NULL
   switch (project,
-    "TCGA-DLBC" ={data = list("blood","Primary Tumor", "Blood Derived Normal")},    #Lymphoma
-    "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")},                                             #Lung
+    "TCGA-DLBC" ={data = list("thyroid","Primary Tumor", "Blood Derived Normal")},                                      #Lymphoma
     "TCGA-LAML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Leukemia
     "TCGA-LCML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Myelogenous Leukemia
     "TCGA-PRAD" ={data = list("prostate", "Primary Tumor", "Solid Tissue Normal")},                                         #Prostate
-    "TCGA-BRCA" ={data = list("breast", "Primary Tumor", "Solid Tissue Normal")}                                            #Breast
+    "TCGA-BRCA" ={data = list("breast", "Primary Tumor", "Solid Tissue Normal")},                                           #Breast
+    "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")}                                              #Lung
     )
   return(data)
 }
@@ -56,7 +56,7 @@ PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 LOGFILE = snakemake@output[[2]]
 ###################################
-
+#PROJECT ="TCGA-LAML"
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
 data = getTissue(PROJECT)
@@ -86,56 +86,74 @@ print(PROJECT)
 log = data.frame(matrix(ncol = 6, nrow = 1))
 colnames(log) = c("Project", "Tissue", "PT", "PTSource", "NT", "NTSource")
 log["Project"] = PROJECT
+tissue = data[[1]]
+log["Tissue"] = tissue
 
 if (typeof(downloadFromTcga) == "list") {
   # TP from TCGA - NT from TCGA
   log["PTSource"] = "TCGA-GDC"
   log["NTSource"] = "TCGA-GDC"
-  DEG.ucs = elaborateTcga(query = query)
+  DEG = elaborateTcga(query = query)
 } else {
   # NT from GTEX
-  log["Tissue"] = data[[1]]
-  log["NTSource"] = "GTEX"
-  tissue = data[[1]]
-  GTEX = paste("GTEX_",tissue,sep="")
+  log["NTSource"] = "Recount-GTEX"
   print("No normal-tissue from TCGA: downloading NT data from GTEX")
-  ucs.recount.gtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
-  log["NT"] = ncol(ucs.recount.gtex[[GTEX]])
-  eset.gtex<-assays(scale_counts(ucs.recount.gtex[[GTEX]], round = TRUE))$counts
-  rownames(eset.gtex) <- gsub("\\..*", "", rownames(eset.gtex))
-
+  if (PROJECT=="TCGA-LAML") {
+    GTEX = paste("GTEX_","blood",sep="")
+    log["GTEX-Tissue"] = "blood"
+    recountGtex<-TCGAquery_recount2(project="GTEX", tissue="blood")
+  } else {
+    GTEX = paste("GTEX_",tissue,sep="")  
+    log["GTEX-tissue"] = tissue
+    recountGtex<-TCGAquery_recount2(project="GTEX", tissue=tissue)
+  }
+  log["NT"] = ncol(recountGtex[[GTEX]])
+  gtexNt<-assays(scale_counts(recountGtex[[GTEX]], round = TRUE))$counts
+  rownames(gtexNt) <- gsub("\\..*", "", rownames(gtexNt))
+ 
   if (downloadFromTcga=="Part") {
     # TP from TCGA with GDC
     print("Downloading data from TCGA using GDC Query")
-    log["PTSource"] = "TCGA-GDC"
     GDCdownload(query)
     experiment <- GDCprepare(query = query)
     log["PT"] = count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
-    eset.tcga.cancer = assay(experiment)
+    barcodes = experiment@colData@listData[["submitter_id"]]
+  } 
+  # TP from TCGA with recount
+  print("Downloading data from TCGA using Recount")
+  log["PTSource"] = "Recount-TCGA"
+  log["Recount-Tissue"] = tissue
+  TCGA = paste("TCGA_",tissue,sep="")
+  recountTcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)
+  if (downloadFromTcga =="Part") {
+    log["PTbarcodefilter"] = "True"
+    filter = colData(recountTcga[[TCGA]])$gdc_cases.submitter_id %in% barcodes
+    recountTcga<-recountTcga[[TCGA]][,filter]
+    log["PT"] = ncol(recountTcga)
+    tcgaDf<-assays(scale_counts(recountTcga, round = TRUE))$counts
+    colnames(tcgaDf)<-colData(recountTcga)$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+    rownames(tcgaDf) <- gsub("\\..*", "", rownames(tcgaDf))
+    tcgaDf.cancer<-tcgaDf[,which(colData(recountTcga)$gdc_cases.samples.sample_type==data[[2]])]
   } else {
-    # TP from TCGA with recount
-    print("Downloading data from TCGA using Recount")
-    log["PTSource"] = "Recount"
-    TCGA = paste("TCGA_",tissue,sep="")
-    ucs.recount.tcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)
-    log["PT"] = ncol(ucs.recount.tcga[[TCGA]])
-    eset.tcga<-assays(scale_counts(ucs.recount.tcga[[TCGA]], round = TRUE))$counts
-    colnames(eset.tcga)<-colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
-    rownames(eset.tcga) <- gsub("\\..*", "", rownames(eset.tcga))
-    eset.tcga.cancer<-eset.tcga[,which(colData(ucs.recount.tcga[[TCGA]])$gdc_cases.samples.sample_type==data[[2]])]
+    log["PT"] = ncol(recountTcga[[TCGA]])
+    tcgaDf<-assays(scale_counts(recountTcga[[TCGA]], round = TRUE))$counts
+    colnames(tcgaDf)<-colData(recountTcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+    rownames(tcgaDf) <- gsub("\\..*", "", rownames(tcgaDf))
+    tcgaDf.cancer<-tcgaDf[,which(colData(recountTcga[[TCGA]])$gdc_cases.samples.sample_type==data[[2]])]
   }
+  
   ##merging data by row names
   print("Performing data preparaton")
-  dataPrep.ucs<-merge(as.data.frame(eset.gtex), as.data.frame(eset.tcga.cancer), by=0)
+  dataPrep.ucs<-merge(as.data.frame(gtexNt), as.data.frame(tcgaDf.cancer), by=0)
   rownames(dataPrep.ucs)<-dataPrep.ucs$Row.names
   dataPrep.ucs$Row.names<-NULL
   print("Performing data normalization")
-  dataNorm.ucs <- TCGAanalyze_Normalization(tabDF = dataPrep.ucs, geneInfo = geneInfoHT)
+  dataNorm <- TCGAanalyze_Normalization(tabDF = dataPrep.ucs, geneInfo = geneInfoHT)
   print("Performing data filtering")
-  dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm.ucs, method = "quantile", qnt.cut =  0.25)
+  dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
-  DEG.ucs <- TCGAanalyze_DEA( mat1 = dataFilt[,colnames(eset.gtex)],
-                              mat2 = dataFilt[,colnames(eset.tcga.cancer)],
+  DEG <- TCGAanalyze_DEA( mat1 = dataFilt[,colnames(gtexNt)],
+                              mat2 = dataFilt[,colnames(tcgaDf.cancer)],
                               Cond1type = "Normal",
                               Cond2type = "Tumor",
                               fdr.cut = 1 ,
@@ -143,7 +161,7 @@ if (typeof(downloadFromTcga) == "list") {
                               method = "glmLRT")
 }
 print("-----Dataset creation: Start-----")
-dataset = DEG.ucs
+dataset = DEG
 symbols = unlist(c(row.names(dataset)))
 dataset['genes.Entrezid']= tryCatch({
   mapIds(org.Hs.eg.db, symbols, 'ENTREZID', 'SYMBOL')},

@@ -24,6 +24,13 @@ rule generate_gmt:
     shell:
         "pygna geneset-from-table {input} {params.dataset} --output-gmt {output} -f significant -d significant -n genes.Entrezid -t 0.5 -a greater"
 
+rule merge_gmt:
+    input:
+        expand(OUTPATH+"{n}/{n}.gmt", n=GENESET),
+    output:
+        OUTPATH+"merged.gmt"
+    shell:
+        "cat {input} >> {output}"
 
 rule generate_matrix_sp:
     input:
@@ -170,7 +177,7 @@ rule test_diffusion_hotnet:
 rule within_comparison_RW:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.gmt",
+        A=OUTPATH+"merged.gmt",
         matrix=RWR_MATRIX
     params:
         nop=config["within_comparison"]["number_of_permutations"],
@@ -185,7 +192,7 @@ rule within_comparison_RW:
 rule within_comparison_SP:
     input:
         network=NETWORK,
-        A=OUTPATH+"{n}/{n}.gmt",
+        A=OUTPATH+"merged.gmt",
         matrix=SP_MATRIX
     params:
         nop=config["within_comparison"]["number_of_permutations"],

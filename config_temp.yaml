@@ -5,7 +5,7 @@ parameters:
     geneset_file: '../pygna_paper_proj/data/external/bailey.gmt'
     diagnostic_folder: '../pygna_paper_proj/results/temp/figures/'
     outpath: '../pygna_paper_proj/results/temp/datasets/'
-    tcga_dataset: ["tcga_brca", "tcga_prad", "tcga_lusc", "tcga_laml", "tcga_dlbc", "tcga_lcml"]
+    tcga_dataset: ["tcga_brca", "tcga_prad", "tcga_lusc", "tcga_laml"]#, "tcga_dlbc", "tcga_lcml"]
 
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']

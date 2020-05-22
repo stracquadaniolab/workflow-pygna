@@ -39,13 +39,17 @@ for (p in tcgaProjects) {
 Print the tables of each project
 ```{r}
 i = 1
+merged = data.frame()
 for (p in tcgaProjects){
   results = queryRes[i]
   results = results[[1]][[1]]
   sampleTypes = results[c("sample_type", "project")]
   sampleTypes = unique(sampleTypes)
-  print(sampleTypes)
+  merged = rbind(merged, sampleTypes)
+  merged = rbind(merged,c("",""))
   i = i+1
 }
+print(merged)
+write.csv(merged,"datasettypes.csv")
 ```
 
