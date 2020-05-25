@@ -7,9 +7,9 @@
 #$ -pe smp 8
 
 source ~fcassano/.bashrc
-conda activate pygna
+conda activate pygna38
 
-snakemake --snakefile Snakefile --cores 6
+snakemake --snakefile Snakefile --cores 8
 
 source deactivate
 module unload anaconda

@@ -42,9 +42,9 @@ elaborateTcga <- function(query) {
 getTissue <-function(project) {
   data = NULL
   switch (project,
-    "TCGA-DLBC" ={data = list("thyroid","Primary Tumor", "Blood Derived Normal")},                                      #Lymphoma
-    "TCGA-LAML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Leukemia
+    "TCGA-DLBC" ={data = list("blood","Primary Tumor", "Blood Derived Normal")},                                            #Lymphoma
     "TCGA-LCML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Myelogenous Leukemia
+    "TCGA-LAML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Leukemia
     "TCGA-PRAD" ={data = list("prostate", "Primary Tumor", "Solid Tissue Normal")},                                         #Prostate
     "TCGA-BRCA" ={data = list("breast", "Primary Tumor", "Solid Tissue Normal")},                                           #Breast
     "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")}                                              #Lung
@@ -56,7 +56,7 @@ PROJECT = snakemake@params[["name"]]
 OUTPUTFILE= snakemake@output[[1]]
 LOGFILE = snakemake@output[[2]]
 ###################################
-#PROJECT ="TCGA-LAML"
+#PROJECT ="TCGA-DLBC"
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
 data = getTissue(PROJECT)
@@ -95,6 +95,7 @@ if (typeof(downloadFromTcga) == "list") {
   log["NTSource"] = "TCGA-GDC"
   DEG = elaborateTcga(query = query)
 } else {
+  
   # NT from GTEX
   log["NTSource"] = "Recount-GTEX"
   print("No normal-tissue from TCGA: downloading NT data from GTEX")
@@ -111,29 +112,43 @@ if (typeof(downloadFromTcga) == "list") {
   gtexNt<-assays(scale_counts(recountGtex[[GTEX]], round = TRUE))$counts
   rownames(gtexNt) <- gsub("\\..*", "", rownames(gtexNt))
  
-  if (downloadFromTcga=="Part") {
-    # TP from TCGA with GDC
-    print("Downloading data from TCGA using GDC Query")
-    GDCdownload(query)
-    experiment <- GDCprepare(query = query)
-    log["PT"] = count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
-    barcodes = experiment@colData@listData[["submitter_id"]]
-  } 
   # TP from TCGA with recount
   print("Downloading data from TCGA using Recount")
   log["PTSource"] = "Recount-TCGA"
-  log["Recount-Tissue"] = tissue
-  TCGA = paste("TCGA_",tissue,sep="")
-  recountTcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)
+  if (PROJECT == "TCGA-DLBC") {
+    log["Recount-Tissue"] = "lymph_nodes"
+    TCGA = paste("TCGA_","lymph_nodes",sep="")
+    recountTcga<-TCGAquery_recount2(project="TCGA", tissue="lymph_nodes")
+  } else {
+    log["Recount-Tissue"] = tissue
+    TCGA = paste("TCGA_",tissue,sep="")
+    recountTcga<-TCGAquery_recount2(project="TCGA", tissue=tissue)
+  }
+  
   if (downloadFromTcga =="Part") {
-    log["PTbarcodefilter"] = "True"
-    filter = colData(recountTcga[[TCGA]])$gdc_cases.submitter_id %in% barcodes
-    recountTcga<-recountTcga[[TCGA]][,filter]
-    log["PT"] = ncol(recountTcga)
-    tcgaDf<-assays(scale_counts(recountTcga, round = TRUE))$counts
-    colnames(tcgaDf)<-colData(recountTcga)$gdc_cases.samples.portions.analytes.aliquots.submitter_id
-    rownames(tcgaDf) <- gsub("\\..*", "", rownames(tcgaDf))
-    tcgaDf.cancer<-tcgaDf[,which(colData(recountTcga)$gdc_cases.samples.sample_type==data[[2]])]
+    if (PROJECT!= "TCGA-DLBC"){
+      # TP from TCGA with GDC
+      print("Downloading data from TCGA using GDC Query")
+      GDCdownload(query)
+      experiment <- GDCprepare(query = query)
+      log["PT"] = count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
+      barcodes = experiment@colData@listData[["submitter_id"]]
+      log["PTbarcodefilter"] = "True"
+      
+      filter = colData(recountTcga[[TCGA]])$gdc_cases.submitter_id %in% barcodes
+      recountTcga<-recountTcga[[TCGA]][,filter]
+      log["PT"] = ncol(recountTcga)
+      tcgaDf<-assays(scale_counts(recountTcga, round = TRUE))$counts
+      colnames(tcgaDf)<-colData(recountTcga)$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+      rownames(tcgaDf) <- gsub("\\..*", "", rownames(tcgaDf))
+      tcgaDf.cancer<-tcgaDf[,which(colData(recountTcga)$gdc_cases.samples.sample_type==data[[2]])]
+    } else {
+      log["PT"] = ncol(recountTcga[[TCGA]])
+      tcgaDf<-assays(scale_counts(recountTcga[[TCGA]], round = TRUE))$counts
+      colnames(tcgaDf)<-colData(recountTcga[[TCGA]])$gdc_cases.samples.portions.analytes.aliquots.submitter_id
+      rownames(tcgaDf) <- gsub("\\..*", "", rownames(tcgaDf))
+      tcgaDf.cancer<-tcgaDf[,which(colData(recountTcga[[TCGA]])$gdc_cases.samples.sample_type==data[[2]])]
+    }
   } else {
     log["PT"] = ncol(recountTcga[[TCGA]])
     tcgaDf<-assays(scale_counts(recountTcga[[TCGA]], round = TRUE))$counts
