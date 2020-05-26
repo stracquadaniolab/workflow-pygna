@@ -1,10 +1,10 @@
 parameters:
-    network_file: '../pygna_paper_proj/data/external/biogrid_3.168_filtered.tsv'
-    sp_matrix: "../pygna_paper_proj/data/external/matrices/interactome_SP.hdf5"
-    rwr_matrix: "../pygna_paper_proj/data/external/matrices/interactome_RWR.hdf5"
-    geneset_file: '../pygna_paper_proj/data/external/bailey.gmt'
-    diagnostic_folder: '../pygna_paper_proj/results/temp/figures/'
-    outpath: '../pygna_paper_proj/results/temp/datasets/'
+    network_file: '../dataset-pygna-workflow-results/data/external/biogrid_3.168_filtered.tsv'
+    sp_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_SP.hdf5"
+    rwr_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_RWR.hdf5"
+    geneset_file: '../dataset-pygna-workflow-results/data/external/bailey.gmt'
+    diagnostic_folder: '../dataset-pygna-workflow-results/data/processed/temp/figures/'
+    outpath: '../dataset-pygna-workflow-results/data/processed/temp/datasets/'
     tcga_dataset: ["tcga_brca", "tcga_prad", "tcga_lusc", "tcga_laml", "tcga_dlbc"]#, "tcga_lcml"]
 
 topology:
@@ -14,7 +14,7 @@ topology:
 
 association:
     analyse: ['rwr', 'sp']
-    geneset_B : '../pygna_paper_proj/data/external/goslimEntrez.gmt'
+    geneset_B : '../dataset-pygna-workflow-results/data/external/goslimEntrez.gmt'
     number_of_permutations: 1000
     cores: 4
 
