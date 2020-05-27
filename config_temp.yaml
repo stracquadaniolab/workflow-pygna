@@ -1,7 +1,7 @@
 parameters:
     network_file: '../dataset-pygna-workflow-results/data/external/biogrid_3.168_filtered.tsv'
-    sp_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_SP.hdf5"
-    rwr_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_RWR.hdf5"
+    sp_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_sp.hdf5"
+    rwr_matrix: "../dataset-pygna-workflow-results/data/external/matrices/interactome_rwr.hdf5"
     geneset_file: '../dataset-pygna-workflow-results/data/external/bailey.gmt'
     diagnostic_folder: '../dataset-pygna-workflow-results/data/processed/temp/figures/'
     outpath: '../dataset-pygna-workflow-results/data/processed/temp/datasets/'
