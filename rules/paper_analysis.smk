@@ -183,7 +183,7 @@ rule within_comparison_RW:
         nop=config["within_comparison"]["number_of_permutations"],
         cores=config["within_comparison"]["cores"]
     output:
-	    OUTPATH+"{n}/table_within_comparison_rwr.csv"
+	    OUTPATH+"table_within_comparison_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
@@ -198,7 +198,7 @@ rule within_comparison_SP:
         nop=config["within_comparison"]["number_of_permutations"],
         cores=config["within_comparison"]["cores"]
     output:
-	    OUTPATH+"{n}/table_within_comparison_sp.csv"
+	    OUTPATH+"table_within_comparison_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
