@@ -21,7 +21,7 @@ association:
 within_comparison:
     analyse: ['rwr', 'sp']
     number_of_permutations: 1000
-    cores: 4
+    cores: 16
 
 figures:
     extension: ['png']
