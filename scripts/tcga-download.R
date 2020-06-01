@@ -47,7 +47,8 @@ getTissue <-function(project) {
     "TCGA-LAML" ={data = list("bone_marrow","Primary Blood Derived Cancer - Peripheral Blood", "Blood Derived Normal")},    #Leukemia
     "TCGA-PRAD" ={data = list("prostate", "Primary Tumor", "Solid Tissue Normal")},                                         #Prostate
     "TCGA-BRCA" ={data = list("breast", "Primary Tumor", "Solid Tissue Normal")},                                           #Breast
-    "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")}                                              #Lung
+    "TCGA-LUSC" ={data = list("lung", "Primary Tumor", "Solid Tissue Normal")},                                             #Lung
+    "TCGA-BLCA" ={data = list("bladder","Primary Tumor", "Solid Tissue Normal")}                                            #Bladder
     )
   return(data)
 }
