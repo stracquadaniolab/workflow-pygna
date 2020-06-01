@@ -60,6 +60,22 @@ rule plot_within_comparison_sp:
     shell:
         "pygna paint-comparison-matrix {input} {output} --single-geneset --annotate"
 
+rule plot_within_comparison_rwr_all:
+    input:
+        OUTPATH+"table_within_comparison_rwr.csv",
+    output:
+        OUTFIGURES+"heatmap_within_comparison_rwr.{e}"
+    shell:
+        "pygna paint-comparison-matrix {input} {output} --rwr --single-geneset --annotate"
+
+rule plot_within_comparison_sp_all:
+    input:
+        OUTPATH+"table_within_comparison_sp.csv",
+    output:
+        OUTFIGURES+"heatmap_within_comparison_sp.{e}"
+    shell:
+        "pygna paint-comparison-matrix {input} {output} --single-geneset --annotate"
+
 rule plot_association_rwr:
     input:
         OUTPATH+"{n}/table_association_rwr.csv",
