@@ -37,8 +37,8 @@ rule all:
         expand(OUTPATH+"{n}/{n}.csv", n=GENESET),
         expand(OUTPATH+"{n}/table_topology_{t}.csv", t=TOPOLOGY, n=GENESET),
         expand(OUTFIGURES+"{n}/barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS,n=GENESET),
-        #expand(OUTPATH+"{n}/table_association_{t}.csv", t=ASSOCIATION, n=GENESET),
-        #expand(OUTFIGURES+"{n}/heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS, n=GENESET),
+        expand(OUTPATH+"{n}/table_association_{t}.csv", t=ASSOCIATION, n=GENESET),
+        expand(OUTFIGURES+"{n}/heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS, n=GENESET),
         expand(OUTPATH+"table_within_comparison_{t}.csv", t=COMPARISON, n=GENESET),
         expand(OUTFIGURES+"heatmap_within_comparison_{t}.{e}", t=COMPARISON, e=EXTENSIONS,n=GENESET),
 
