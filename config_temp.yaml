@@ -10,13 +10,13 @@ parameters:
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
     number_of_permutations: 1000
-    cores: 4
+    cores: 8
 
 association:
     analyse: ['rwr', 'sp']
     geneset_B : '../dataset-pygna-workflow-results/data/external/goslim_entrez.gmt'
     number_of_permutations: 1000
-    cores: 4
+    cores: 8
 
 within_comparison:
     analyse: ['rwr', 'sp']
