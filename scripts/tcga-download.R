@@ -1,5 +1,7 @@
 ####IMPORTANT! Please download the github version to use the most recent version of TCGAbiolinks
 ###Use devtools::install_github(repo = "ELELAB/TCGAbiolinks")
+
+
 requiredPackages = c("BiocManager","SummarizedExperiment", "TCGAbiolinks", "org.Hs.eg.db", "recount", "TCGAutils", "limma", "biomaRt", "stringr")
 for(p in requiredPackages){
   if(!require(p,character.only = TRUE)) {
@@ -19,7 +21,7 @@ elaborateTcga <- function(query) {
   GDCdownload(query, DATAFOLDER)
   experiment <- GDCprepare(query = query)
   
-  dataPrep <- TCGAanalyze_Preprocessing(object = experiment, datatype = "HTSeq - Counts")
+  dataPrep <- TCGAanalyze_Preprocessing(object = experiment, cor.cut = 0.6, datatype = "HTSeq - Counts")
   
   log["PT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
   log["NT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[3])
