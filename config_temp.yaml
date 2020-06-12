@@ -16,7 +16,7 @@ association:
     analyse: ['rwr', 'sp']
     geneset_B : '../dataset-pygna-workflow-results/data/external/goslim_entrez.gmt'
     number_of_permutations: 1000
-    cores: 8
+    cores: 20
 
 within_comparison:
     analyse: ['rwr', 'sp']
