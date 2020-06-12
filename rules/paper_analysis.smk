@@ -9,7 +9,8 @@ rule generate_data:
     conda: "../envs/tcgabiolinks.yaml"
     params:
         name= "{n}",
-        folder= OUTPATH+"{n}"
+        folder= OUTPATH+"{n}",
+        raw_data = OUTPATH+"raw_data/"
     script:
         "../scripts/tcga-download.R"
 

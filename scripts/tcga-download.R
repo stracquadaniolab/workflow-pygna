@@ -15,26 +15,34 @@ for(p in requiredPackages){
 elaborateTcga <- function(query) {
   # Start the elaboration on TCGA (there are only tumor samples)
   print("Downloading data from TCGA")
-  GDCdownload(query)
+  
+  GDCdownload(query, DATAFOLDER)
   experiment <- GDCprepare(query = query)
+  
+  dataPrep <- TCGAanalyze_Preprocessing(object = experiment, datatype = "HTSeq - Counts")
+  
   log["PT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[2])
   log["NT"] <<- count(experiment@colData@listData[["sample_type"]] == getTissue(PROJECT)[3])
+  
   tcgaDf.cancer = assay(experiment)
   print("Normal tissue found in TCGA")
   print("Performing data normalization")
-  dataNorm <- TCGAanalyze_Normalization(tabDF = tcgaDf.cancer, geneInfo =  geneInfoHT)
+  
+  dataNorm <- TCGAanalyze_Normalization(tabDF = tcgaDf.cancer, geneInfo =  geneInfoHT, method= "gcContent")
   print("Performing data filtering")
+  
   dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
+  
   samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
   samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
-  DEG <- TCGAanalyze_DEA( mat1 = dataFilt[,samplesNT],
-                              mat2 = dataFilt[,samplesTP],
-                              Cond1type = "Normal",
-                              Cond2type = "Tumor",
-                              fdr.cut = 1,
-                              logFC.cut = 0,
-                              method = "glmLRT")
+  DEG <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
+                         mat2 = dataFilt[,samplesTP],
+                         Cond1type = "Normal",
+                         Cond2type = "Tumor",
+                         fdr.cut = 1,
+                         logFC.cut = 0,
+                         method = "glmLRT")
   return (DEG)
 }
 
@@ -54,10 +62,14 @@ getTissue <-function(project) {
 }
 
 PROJECT = snakemake@params[["name"]]
+DATAFOLDER = snakemake@params[["raw_data"]]
 OUTPUTFILE= snakemake@output[[1]]
 LOGFILE = snakemake@output[[2]]
 ###################################
-#PROJECT ="TCGA-DLBC"
+#PROJECT ="TCGA-BLCA"
+#OUTPUTFILE = "blca.csv"
+#LOGFILE = "log.csv"
+
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
 data = getTissue(PROJECT)
