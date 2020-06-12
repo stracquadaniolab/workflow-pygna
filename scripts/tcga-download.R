@@ -18,7 +18,7 @@ elaborateTcga <- function(query) {
   # Start the elaboration on TCGA (there are only tumor samples)
   print("Downloading data from TCGA")
   
-  GDCdownload(query, DATAFOLDER)
+  GDCdownload(query, directory=DATAFOLDER)
   experiment <- GDCprepare(query = query)
   
   dataPrep <- TCGAanalyze_Preprocessing(object = experiment, cor.cut = 0.6, datatype = "HTSeq - Counts")
@@ -71,6 +71,7 @@ LOGFILE = snakemake@output[[2]]
 #PROJECT ="TCGA-BLCA"
 #OUTPUTFILE = "blca.csv"
 #LOGFILE = "log.csv"
+#DATAFOLDER = "./"
 
 PROJECT = toupper(PROJECT)
 PROJECT = str_replace(PROJECT,"_","-")
