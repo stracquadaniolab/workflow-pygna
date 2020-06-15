@@ -10,7 +10,7 @@ parameters:
 topology:
     analyse: ['module','internal_degree','total_degree','rwr', 'sp']
     number_of_permutations: 1000
-    cores: 8
+    cores: 10
 
 association:
     analyse: ['rwr', 'sp']
@@ -21,7 +21,7 @@ association:
 within_comparison:
     analyse: ['rwr', 'sp']
     number_of_permutations: 1000
-    cores: 16
+    cores: 20
 
 figures:
     extension: ['png']

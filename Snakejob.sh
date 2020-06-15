@@ -4,7 +4,7 @@
 #$ -cwd
 #$ -l h_rt=200:00:00
 #$ -M fabio.cassano@ed.ac.uk
-#$ -pe smp 8
+#$ -pe smp 20
 
 source ~fcassano/.bashrc
 conda activate pygna38
