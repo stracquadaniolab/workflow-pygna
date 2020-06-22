@@ -5,7 +5,8 @@
 rule generate_data:
     output:
         OUTPATH+"{n}/{n}.csv",
-        OUTPATH+"{n}/log.csv"
+        OUTPATH+"{n}/log.csv",
+        OUTPATH+"{n}/{n}_datafilt.csv"
     conda: "../envs/tcgabiolinks.yaml"
     params:
         name= "{n}",
