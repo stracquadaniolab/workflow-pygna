@@ -10,4 +10,4 @@ dependencies:
   - bioconductor-summarizedexperiment
   - bioconductor-org.hs.eg.db
   - r-stringi
-  - recount
+  - bioconductor-recount

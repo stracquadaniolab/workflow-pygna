@@ -35,6 +35,9 @@ elaborateTcga <- function(query) {
   
   dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
+  samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
+  samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
+  
   nt <- which(colnames(dataFilt) %in% samplesNT)
   tp <- which(colnames(dataFilt) %in% samplesTP)
   print(cbind(samplesNT, samplesTP))
@@ -49,8 +52,7 @@ elaborateTcga <- function(query) {
   print(de)
   data2 <- rbind(dataFilt, de)
   write.csv(data2, PARTIALTABLE)
-  samplesNT <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("NT"))
-  samplesTP <- TCGAquery_SampleTypes(barcode = colnames(dataFilt),typesample = c("TP"))
+  
   DEG <- TCGAanalyze_DEA(mat1 = dataFilt[,samplesNT],
                          mat2 = dataFilt[,samplesTP],
                          Cond1type = "Normal",
@@ -198,6 +200,7 @@ if (typeof(downloadFromTcga) == "list") {
   print("Performing data filtering")
   dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
+  
   nt <- which(colnames(dataFilt) %in% dataFilt[,colnames(gtexNt)])
   tp <- which(colnames(dataFilt) %in% dataFilt[,colnames(tcgaDf.cancer)])
   print(cbind(dataFilt[,colnames(gtexNt)], dataFilt[,colnames(tcgaDf.cancer)]))
@@ -212,6 +215,7 @@ if (typeof(downloadFromTcga) == "list") {
   print(de)
   data2 <- rbind(dataFilt, de)
   write.csv(data2, PARTIALTABLE)
+  
   DEG <- TCGAanalyze_DEA( mat1 = dataFilt[,colnames(gtexNt)],
                               mat2 = dataFilt[,colnames(tcgaDf.cancer)],
                               Cond1type = "Normal",
