@@ -85,7 +85,7 @@ LOGFILE = snakemake@output[[2]]
 PARTIALTABLE= snakemake@output[[3]]
 ###################################
 #PROJECT ="TCGA-LAML"
-#OUTPUTFILE = "blca.csv"
+#OUTPUTFILE = "laml.csv"
 #LOGFILE = "log.csv"
 #DATAFOLDER = "./"
 #PARTIALTABLE = "datafilt.csv"
@@ -201,8 +201,8 @@ if (typeof(downloadFromTcga) == "list") {
   dataFilt <- TCGAanalyze_Filtering(tabDF = dataNorm, method = "quantile", qnt.cut =  0.25)
   print("Performing DEA")
   
-  nt <- which(colnames(dataFilt) %in% dataFilt[,colnames(gtexNt)])
-  tp <- which(colnames(dataFilt) %in% dataFilt[,colnames(tcgaDf.cancer)])
+  nt <- which(colnames(dataFilt) %in% colnames(dataFilt[,colnames(gtexNt)]))
+  tp <- which(colnames(dataFilt) %in% colnames(dataFilt[,colnames(tcgaDf.cancer)]))
   print(cbind(dataFilt[,colnames(gtexNt)], dataFilt[,colnames(tcgaDf.cancer)]))
   x <- seq(1,length(colnames(dataFilt)),1)
   x1 <- ifelse(x %in% tp, 2, 0)
