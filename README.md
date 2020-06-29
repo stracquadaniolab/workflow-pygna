@@ -84,6 +84,7 @@ Following the next steps you should be able to run the paper pipelines:
 
 1. First download the data folder from [Zenodo](https://zenodo.org/record/3574027#.XfObSZP7RTY)   
 
+
 2. The pipeline uses the data folder path, you can:  
     A. add the data folder inside the workflow-pygna folder 
     B. change the relative path in the config file  
@@ -110,7 +111,7 @@ We provide a Snakefile to replicate the results of the paper:
 
 Following the next steps you should be able to run the paper pipelines:
 
-1. First download the data folder from [Zenodo](https://zenodo.org/record/3574027#.XfObSZP7RTY)   
+1. First download the data folder from [Zenodo](https://zenodo.org/record/3922015#.XvoAJc9KhGM)   
 
 2. The pipeline uses the data folder path, you can:  
     A. add the data folder inside the workflow-pygna folder 
