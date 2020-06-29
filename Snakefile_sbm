@@ -1,0 +1,42 @@
+# snakefile for simulate-sbm
+# written by: viola.fanfani
+
+#configfile: "workflows/config_sbm.yaml"
+
+# Simulations Parameters
+sim_path= config["simulations"]["sim_path"]
+
+OUTPATH=config["simulations"]["outpath"]
+NOP=config["simulations"]["nop"]
+
+simtype = config["simulations"]["sim_type"]
+
+
+# gnt parameters
+
+gnt_analysis = config["gnt_parameters"]["analysis"]
+n_nodes= config["gnt_parameters"]["n_nodes"]
+NPm=config["gnt_parameters"]["network_probability"]
+NCm = config["gnt_parameters"]["fc"]
+NNm = config["gnt_parameters"]["nnodes"]
+Sm=range(config["gnt_parameters"]["number_of_simulations"])
+
+# Crosstalk parameters
+
+gna_analysis = config["gna_parameters"]["analysis"]
+n_nodesm= config["gna_parameters"]["n_nodes"]
+NPct=config["gna_parameters"]["network_probability"]
+cis = config["gna_parameters"]["fc_cis"]
+trans = config["gna_parameters"]["fc_trans"]
+NNct = config["gna_parameters"]["nnodes"]
+Sct=range(config["gna_parameters"]["number_of_simulations"])
+
+
+include: "rules/sbm_gnt.smk"
+include: "rules/sbm_gna.smk"
+
+
+rule all:
+    input:
+        expand(OUTPATH + "final_{st}.csv", st = simtype)
+

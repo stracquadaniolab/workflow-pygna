@@ -102,7 +102,7 @@ rule association_RW:
 	    OUTPATH+"table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 rule association_SP:
@@ -118,7 +118,7 @@ rule association_SP:
 	    OUTPATH+"table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
 # COMPARISON
 rule comparison_RW:
@@ -134,7 +134,7 @@ rule comparison_RW:
 	    OUTPATH+"table_comparison_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 rule comparison_SP:
@@ -150,7 +150,7 @@ rule comparison_SP:
 	    OUTPATH+"table_comparison_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
-        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} -B {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
+        "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --number-of-permutations {params.nop} --cores {params.cores}"
 
 
 # SINGLE GENESET COMPARISON

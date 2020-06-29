@@ -1,10 +1,10 @@
-configfile: "config_temp.yaml"
+configfile: "config.yaml"
 import os
 
 # Network Parameters
 NETWORK=config["parameters"]["network_file"]
 OUTPATH=config["parameters"]["outpath"]
-GENESET=config["parameters"]["tcga_dataset"]
+GENESET=config["parameters"]["geneset_file"]
 GENESETB = config["association"]["geneset_B"]
 
 TOPOLOGY = config["topology"]["analyse"]
@@ -14,6 +14,8 @@ COMPARISON = config["within_comparison"]["analyse"]
 EXTENSIONS=config['figures']['extension']
 OUTFIGURES=OUTPATH + config['figures']['outpath']
 
+# The diagnostic folder needs to be made manually because it's not an output 
+# This is not very snakemake friendly, we apologise
 if not os.path.exists(config["parameters"]["diagnostic_folder"]):
     os.mkdir(config["parameters"]["diagnostic_folder"])
 
@@ -28,33 +30,29 @@ if len(config["parameters"]["rwr_matrix"])>0:
 else:
     RWR_MATRIX=OUTPATH+"_rwr_matrix.hdf5"
 
-#include: "rules/pygna.smk"
+
+include: "rules/pygna.smk"
 include: "rules/pygna_visualise.smk"
-include: "rules/paper_analysis.smk"
 
 rule all:
     input:
-        expand(OUTPATH+"{n}/{n}.csv", n=GENESET),
         expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),
         expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
         expand(OUTPATH+"table_within_comparison_{t}.csv", t=COMPARISON),
-        expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS),
         expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
         expand(OUTFIGURES+"heatmap_within_comparison_{t}.{e}", t=COMPARISON, e=EXTENSIONS,),
 
 rule GNT_all:
     input:
-        expand(OUTPATH+"{n}/table_topology_{t}.csv", t=TOPOLOGY,n=GENESET),
-        expand(OUTFIGURES+"{n}/barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS,n=GENESET),
+        expand(OUTPATH+"table_topology_{t}.csv", t=TOPOLOGY),
+        expand(OUTFIGURES+"barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS),
 
 rule GNA_association_all:
     input:
-        expand(OUTPATH+"{n}/table_association_{t}.csv", t=ASSOCIATION,n=GENESET),
-        expand(OUTFIGURES+"{n}/heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS,n=GENESET),
+        expand(OUTPATH+"table_association_{t}.csv", t=ASSOCIATION),
 
-rule single_geneset:
+rule GNA_comparison_all:
     input:
-        expand(OUTPATH+"{n}/table_topology_{t}.csv", t=TOPOLOGY,n=GENESET),
-        expand(OUTFIGURES+"{n}/barplot_{t}.{e}", t=TOPOLOGY, e=EXTENSIONS,n=GENESET),
-        expand(OUTPATH+"{n}/table_association_{t}.csv", t=ASSOCIATION,n=GENESET),
-        expand(OUTFIGURES+"{n}/heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS,n=GENESET),
+        expand(OUTPATH+"table_within_comparison_{t}.csv", t=ASSOCIATION,n=GENESET),
+        expand(OUTFIGURES+"heatmap_association_{t}.{e}", t=ASSOCIATION, e=EXTENSIONS)
+

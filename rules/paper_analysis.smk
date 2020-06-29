@@ -128,14 +128,14 @@ rule topology_rwr:
 rule association_RW:
     input:
         network=NETWORK,
-        A=OUTPATH+"merged.gmt",
+        A=OUTPATH+"{n}/{n}.gmt",
         B=GENESETB,
         matrix=RWR_MATRIX
     params:
         nop=config["association"]["number_of_permutations"],
         cores=config["association"]["cores"]
     output:
-	    OUTPATH+"table_association_rwr.csv"
+	    OUTPATH+"{n}/table_association_rwr.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-rwr {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
@@ -145,7 +145,7 @@ rule association_RW:
 rule association_SP:
     input:
         network=NETWORK,
-        A=OUTPATH+"merged.gmt",
+        A=OUTPATH+"{n}/{n}.gmt",
         B=GENESETB,
         matrix=SP_MATRIX
     params:
@@ -153,26 +153,11 @@ rule association_SP:
         cores=config["association"]["cores"],
         diagnostic_folder = config["parameters"]["outpath"]
     output:
-	    OUTPATH+"table_association_sp.csv"
+	    OUTPATH+"{n}/table_association_sp.csv"
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --file-geneset-b {input.B} --keep --number-of-permutations {params.nop} --cores {params.cores}"
 
-
-# DIFFUSION HOTNET
-rule test_diffusion_hotnet:
-    input:
-        network=NETWORK,
-        A=OUTPATH+ "merged.gmt",
-        matrix=RWR_MATRIX,
-    params:
-        nop=config["within_comparison"]["number_of_permutations"],
-        cores=config["within_comparison"]["cores"]
-    output:
-	    OUTPATH+"table_diffusion.csv"
-    conda: "../envs/pygna.yaml"
-    shell:
-        "pygna test-diffusion-hotnet {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores} --name-column genes.Entrezid --weight-column logFC --filter-column significant --filter-condition greater --filter-threshold 0.5  --normalise"
 
 
 # SINGLE GENESET COMPARISON
@@ -204,3 +189,77 @@ rule within_comparison_SP:
     conda: "../envs/pygna.yaml"
     shell:
         "pygna test-association-sp {input.network} {input.A} {input.matrix} {output} --number-of-permutations {params.nop} --cores {params.cores}"
+
+
+
+rule plot_topology_module:
+    input:
+        OUTPATH+"table_topology_module.csv"
+    output:
+        OUTFIGURES+"barplot_module.{e}"
+    shell:
+        "pygna paint-datasets-stats {input} {output}"
+
+rule plot_topology_internal_degree:
+    input:
+        OUTPATH+"table_topology_internal_degree.csv",
+    output:
+        OUTFIGURES+"barplot_internal_degree.{e}"
+    shell:
+        "pygna paint-datasets-stats {input} {output}"
+
+rule plot_topology_total_degree:
+    input:
+        OUTPATH+"table_topology_total_degree.csv",
+    output:
+        OUTFIGURES+"barplot_total_degree.{e}"
+    shell:
+        "pygna paint-datasets-stats {input} {output}"
+
+rule plot_topology_sp:
+    input:
+        OUTPATH+"table_topology_sp.csv",
+    output:
+        OUTFIGURES+"barplot_sp.{e}"
+    shell:
+        "pygna paint-datasets-stats {input} {output}"
+
+rule plot_topology_rwr:
+    input:
+        OUTPATH+"table_topology_rwr.csv",
+    output:
+        OUTFIGURES+"barplot_rwr.{e}"
+    shell:
+        "pygna paint-datasets-stats {input} {output}"
+
+rule plot_within_comparison_rwr:
+    input:
+        OUTPATH+"table_within_comparison_rwr.csv",
+    output:
+        OUTFIGURES+"heatmap_within_comparison_rwr.{e}"
+    shell:
+        "pygna paint-comparison-matrix {input} {output} --rwr --single-geneset --annotate"
+
+rule plot_within_comparison_sp:
+    input:
+        OUTPATH+"table_within_comparison_sp.csv",
+    output:
+        OUTFIGURES+"heatmap_within_comparison_sp.{e}"
+    shell:
+        "pygna paint-comparison-matrix {input} {output} --single-geneset --annotate"
+
+rule plot_association_rwr:
+    input:
+        OUTPATH+"{n}/table_association_rwr.csv",
+    output:
+        OUTFIGURES+"{n}_volcano_association_rwr.{e}"
+    shell:
+        "pygna paint-volcano-plot {input} {output} --rwr --annotate --threshold-y 1"
+
+rule plot_association_sp:
+    input:
+        OUTPATH+"{n}/table_association_sp.csv",
+    output:
+        OUTFIGURES+"{n}_volcano_association_sp.{e}"
+    shell:
+        "pygna paint-volcano-plot {input} {output} --annotate --threshold-y 1"

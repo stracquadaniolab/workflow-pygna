@@ -1,0 +1,22 @@
+simulations:
+    sim_path: "benchmark_sbm/data/"
+    outpath: "benchmark_sbm/results/"
+    nop: 2 # 1000
+    sim_type: ['gnt', 'gna']
+
+gnt_parameters:
+    analysis: ['rwr', 'sp', 'internal_degree', 'total_degree', 'module']
+    n_nodes: [100] # 1000
+    network_probability: [0.5] #0.01, 0.02, 0.05
+    fc: [1] #2,3,5,10
+    nnodes: [5] # 20,50,100
+    number_of_simulations: 1 #10
+
+gna_parameters:
+    analysis: ['rwr', 'sp']
+    n_nodes: [100] # 1000
+    network_probability: [0.5]
+    fc_cis: [1] #2,5
+    fc_trans : [0] # 0,10
+    nnodes: [5] #50,80
+    number_of_simulations: 1 #10
